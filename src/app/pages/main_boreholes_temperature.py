@@ -10,7 +10,7 @@ from sources_boreholes_Tilsig import (
     sources_tilsig_boreholes,
     lookup_by_station_name_tilsig,
 )
-from load_boreholes_data_Tilsig_and_MET import (
+from src.app.loader.load_boreholes_data_Tilsig_and_MET import (
     load_data_MET,
     load_data_Tilsig,
     MET_data_to_dataframe,
