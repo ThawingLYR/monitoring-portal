@@ -1,7 +1,7 @@
 # Imports
 import requests
 
-from src.app.auth.tilsig import get_bearer_token as get_tilsig_bearer_token
+from src.auth.tilsig import get_bearer_token as get_tilsig_bearer_token
 
 #########################
 ### Instrument status ###
