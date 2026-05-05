@@ -1,14 +1,15 @@
 import requests
-import streamlit as st
 from loguru import logger
+
+from src.auth.secrets import get_secret
 
 
 def get_bearer_token():
     try:
         # Define the Tilsig API endpoint and credentials
         endpoint = "https://api.tilsig.com/v1/authentication/authenticate"
-        username = st.secrets.tilsig_username
-        password = st.secrets.tilsig_password
+        username = get_secret("tilsig_username")
+        password = get_secret("tilsig_password")
 
         # Define the data and headers for the token request
         data = {
