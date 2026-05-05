@@ -4,6 +4,8 @@ import streamlit as st
 import folium
 from streamlit_folium import st_folium
 
+from src.app.reusable.folium_basemap import get_folium_basemap
+
 from sources_weather_stations_MET import (
     marker_met_html,
     marker_met_coordinates,
@@ -28,38 +30,40 @@ def convert_df(df):
 st.set_page_config(page_title="Weather stations", layout="wide")
 st.title("Weather stations")
 
-# Create map centered near Longyearbyen
-m = folium.Map(
-    location=[78.213578, 15.699462], zoom_start=10, tiles=None
-)  # , width=300, height=100)
+# # Create map centered near Longyearbyen
+# m = folium.Map(
+#     location=[78.213578, 15.699462], zoom_start=10, tiles=None
+# )  # , width=300, height=100)
 
-folium.raster_layers.WmsTileLayer(
-    url="https://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_Svalbard_WMTS_3857/MapServer/tile/{z}/{y}/{x}",
-    layers="Basisdata_NP_Basiskart_Svalbard_WMTS_3857",
-    fmt="image/png",
-    transparent=False,
-    version="1.0.0",
-    attr="<a href=https://toposvalbard.npolar.no/> TopoSvalbard</a> © 2015 <a href=https://www.npolar.no/en/>Norwegian Polar Insitute</a>",
-    name="Basemap",
-    overlay=False,
-    control=True,
-    show=True,
-).add_to(m)
+# folium.raster_layers.WmsTileLayer(
+#     url="https://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Basiskart_Svalbard_WMTS_3857/MapServer/tile/{z}/{y}/{x}",
+#     layers="Basisdata_NP_Basiskart_Svalbard_WMTS_3857",
+#     fmt="image/png",
+#     transparent=False,
+#     version="1.0.0",
+#     attr="<a href=https://toposvalbard.npolar.no/> TopoSvalbard</a> © 2015 <a href=https://www.npolar.no/en/>Norwegian Polar Insitute</a>",
+#     name="Basemap",
+#     overlay=False,
+#     control=True,
+#     show=True,
+# ).add_to(m)
 
-folium.raster_layers.WmsTileLayer(
-    url="https://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Satellitt_Svalbard_WMTS_3857/MapServer/tile/{z}/{y}/{x}",
-    layers="Basisdata_NP_Satellitt_Svalbard_WMTS_3857",
-    fmt="image/png",
-    transparent=False,
-    version="1.0.0",
-    attr="<a href=https://toposvalbard.npolar.no/> TopoSvalbard</a> © 2015 <a href=https://www.npolar.no/en/>Norwegian Polar Insitute</a>",
-    name="Satellite",
-    overlay=False,
-    control=True,
-    show=False,
-).add_to(m)
+# folium.raster_layers.WmsTileLayer(
+#     url="https://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Satellitt_Svalbard_WMTS_3857/MapServer/tile/{z}/{y}/{x}",
+#     layers="Basisdata_NP_Satellitt_Svalbard_WMTS_3857",
+#     fmt="image/png",
+#     transparent=False,
+#     version="1.0.0",
+#     attr="<a href=https://toposvalbard.npolar.no/> TopoSvalbard</a> © 2015 <a href=https://www.npolar.no/en/>Norwegian Polar Insitute</a>",
+#     name="Satellite",
+#     overlay=False,
+#     control=True,
+#     show=False,
+# ).add_to(m)
 
-folium.LayerControl().add_to(m)
+# folium.LayerControl().add_to(m)
+
+m = get_folium_basemap()
 
 # Create markers with popup texts and icons
 

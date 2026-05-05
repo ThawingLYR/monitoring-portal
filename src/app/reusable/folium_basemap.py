@@ -58,6 +58,21 @@ def get_folium_basemap(location=[78.213578, 15.599462], zoom_start=11):
         show=False,
     ).add_to(m)
 
+    folium.raster_layers.WmsTileLayer(
+        url="https://geodata.npolar.no/arcgis/rest/services/Basisdata/NP_Satellitt_Svalbard_WMTS_3857/MapServer/tile/{z}/{y}/{x}",
+        layers="Basisdata_NP_Satellitt_Svalbard_WMTS_3857",
+        fmt="image/png",
+        transparent=False,
+        version="1.0.0",
+        attr="<a href=https://toposvalbard.npolar.no/> TopoSvalbard</a> © 2015 <a href=https://www.npolar.no/en/>Norwegian Polar Insitute</a>",
+        name="Satellite",
+        min_zoom=0,
+        max_zoom=17,
+        overlay=True,
+        control=True,
+        show=False,
+    ).add_to(m)
+
     # Add layer control: this method ensures that there is no jumping of zoom levels when switching between basemap and ortographic map
     folium.LayerControl().add_to(m)
 
