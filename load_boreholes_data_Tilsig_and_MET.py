@@ -5,6 +5,7 @@ import datetime
 import numpy as np
 import pandas as pd
 
+from loguru import logger
 ##################################################
 ### Data loading from Tilsig and MET functions ###
 ##################################################
@@ -12,222 +13,257 @@ import pandas as pd
 
 # Load data once per day
 @st.cache_data(ttl=86400, show_spinner="Fetching data")
-def load_data_Tilsig(source):
+def load_data_Tilsig(source: str):
+
+    logger.info(f"Loading data for {source['name']} from Tilsig API")
 
     ######################
     ### Authentication ###
     ######################
 
-    # Define the Tilsig API endpoint and credentials
-    endpoint = "https://api.tilsig.com/v1/authentication/authenticate"
-    username = st.secrets.tilsig_username
-    password = st.secrets.tilsig_password
+    try:
+        # Define the Tilsig API endpoint and credentials
+        endpoint = "https://api.tilsig.com/v1/authentication/authenticate"
+        username = st.secrets.tilsig_username
+        password = st.secrets.tilsig_password
 
-    # Define the data and headers for the token request
-    data = {
-        "username": username,
-        "password": password,
-    }
+        # Define the data and headers for the token request
+        data = {
+            "username": username,
+            "password": password,
+        }
 
-    headers = {
-        "accept": "application/json",
-        "Content-Type": "application/json",
-    }
+        headers = {
+            "accept": "application/json",
+            "Content-Type": "application/json",
+        }
 
-    # Send the token request
-    r = requests.post(endpoint, json=data, headers=headers)
+        # Send the token request
+        r = requests.post(endpoint, json=data, headers=headers)
 
-    # Check if request succeeded and retrieve token
-    if r.status_code == 200:
-        token_data = r.json()
-        access_token = token_data["token"]
-    else:
-        print("Error! Returned status code %s" % r.status_code)
+        # Check if request succeeded and retrieve token
+        if r.status_code == 200:
+            token_data = r.json()
+            access_token = token_data["token"]
+        else:
+            raise Exception(f"Authentication failed with status code {r.status_code}")
+
+    except Exception as e:
+        logger.error(f"Error during authentication: {e}")
+        return None
 
     ######################
     ### Data retrieval ###
     ######################
 
-    # Loop over years because data request is limited to 1 year
-    source_sn = str(source["sensorID"])
+    try:
+        # Loop over years because data request is limited to 1 year
+        source_sn = str(source["sensorID"])
 
-    start_date = source["startDate"]
-    start_year = int(start_date[:4])
-    end_year = datetime.datetime.now().year + 1
+        start_date = source["startDate"]
+        start_year = int(start_date[:4])
+        end_year = datetime.datetime.now().year + 1
 
-    years = [start_date]
-    for i in range(end_year - start_year):
-        years.append(str(start_year + 1 + i) + "-01-01")
+        years = [start_date]
+        for i in range(end_year - start_year):
+            years.append(str(start_year + 1 + i) + "-01-01")
 
-    # Define headers for data retrieval
-    headers = {
-        "accept": "application/json",
-        "Authorization": "Bearer " + access_token,
-    }
-
-    for i in range(len(years) - 1):
-        endpoint = "https://api.tilsig.com/v1/measurement/raw"
-        parameters = {
-            "stationId": "",
-            "deviceId": "",
-            "sensorId": source_sn,
-            "from": years[i] + "T00:00:00.000Z",
-            "to": years[i + 1] + "T00:00:00.000Z",
+        # Define headers for data retrieval
+        headers = {
+            "accept": "application/json",
+            "Authorization": "Bearer " + access_token,
         }
 
-        # Issue an HTTP GET request
-        response = requests.get(endpoint, parameters, headers=headers)
-        data_part = response.json()
+        for i in range(len(years) - 1):
+            endpoint = "https://api.tilsig.com/v1/measurement/raw"
+            parameters = {
+                "stationId": "",
+                "deviceId": "",
+                "sensorId": source_sn,
+                "from": years[i] + "T00:00:00.000Z",
+                "to": years[i + 1] + "T00:00:00.000Z",
+            }
 
-        if i == 0:
-            data = data_part
-        else:
-            data = data + data_part
+            # Issue an HTTP GET request
+            response = requests.get(endpoint, parameters, headers=headers)
+            data_part = response.json()
+
+            if i == 0:
+                data = data_part
+            else:
+                data = data + data_part
+    except Exception as e:
+        logger.error(f"Error during data retrieval: {e}")
+        return None
 
     return data
 
 
-def Tilsig_data_to_dataframe(data, source):
-    # Load into to DataFrame
-    df = pd.DataFrame(data)
+def Tilsig_data_to_dataframe(data, source: str) -> pd.DataFrame:
+    assert data is not None, "No data to convert to DataFrame"
 
-    # Parse timestamp to datetime
-    df["timestamp"] = pd.to_datetime(df["timestamp"], format="ISO8601")
+    try:
+        # Load into to DataFrame
+        df = pd.DataFrame(data)
 
-    # Sort by time and sequence
-    df = df.sort_values(["timestamp", "sequence"])
+        # Parse timestamp to datetime
+        df["timestamp"] = pd.to_datetime(df["timestamp"], format="ISO8601")
 
-    # Add depth column corresponding to sequence
-    depth_map = source["depths"]
-    # sequences = np.sort(df['sequence'].unique()).tolist()
-    # depth_map = dict(zip(sequences, depths))
-    df["depth"] = df["sequence"].map(depth_map)
-    df["depthUnit"] = source["depthsUnit"]
+        # Sort by time and sequence
+        df = df.sort_values(["timestamp", "sequence"])
 
-    # Drop unwanted columns
-    df = df.drop(
-        columns=["unitId", "typeId", "category", "sequence"], errors="ignore"
-    ).reset_index()
+        # Add depth column corresponding to sequence
+        depth_map = source["depths"]
+        # sequences = np.sort(df['sequence'].unique()).tolist()
+        # depth_map = dict(zip(sequences, depths))
+        df["depth"] = df["sequence"].map(depth_map)
+        df["depthUnit"] = source["depthsUnit"]
 
-    # Reorder and rename columns
-    desired_order = [
-        "timestamp",
-        "depth",
-        "depthUnit",
-        "type",
-        "value",
-        "unit",
-        "stationId",
-        "deviceId",
-        "sensorId",
-    ]
-    df = df[desired_order]
-    df = df.rename(columns={"timestamp": "referenceTime", "type": "measurementType"})
+        # Drop unwanted columns
+        df = df.drop(
+            columns=["unitId", "typeId", "category", "sequence"], errors="ignore"
+        ).reset_index()
 
-    # Replace faulty values with NaN
-    df.loc[df["value"] > 30, "value"] = np.nan
-    df.loc[df["value"] < -30, "value"] = np.nan
+        # Reorder and rename columns
+        desired_order = [
+            "timestamp",
+            "depth",
+            "depthUnit",
+            "type",
+            "value",
+            "unit",
+            "stationId",
+            "deviceId",
+            "sensorId",
+        ]
+        df = df[desired_order]
+        df = df.rename(
+            columns={"timestamp": "referenceTime", "type": "measurementType"}
+        )
+
+        # Replace faulty values with NaN
+        df.loc[df["value"] > 30, "value"] = np.nan
+        df.loc[df["value"] < -30, "value"] = np.nan
+    except Exception as e:
+        logger.error(f"Error during data processing: {e}")
+        return None
 
     return df
 
 
 # Load data once per day
 @st.cache_data(ttl=86400, show_spinner="Fetching data")
-def load_data_MET(source):
-    # Load data from MET source
-    source_sn = source["sourceID"]
+def load_data_MET(source: str):
+    logger.info(f"Loading data for {source['name']} from MET API")
 
-    # Date tomorrow
-    date_tomorrow = (datetime.date.today() + datetime.timedelta(days=1)).strftime(
-        "%Y-%m-%d"
-    )
+    try:
+        # Load data from MET source
+        source_sn = source["sourceID"]
 
-    # Define reference time for each source
-    if source_sn != "SN99875":
-        reference_times = [source["startDate"] + "/" + date_tomorrow]
-    else:
-        reference_times = [
-            source["startDate"] + "/" + "2008-01-01",
-            "2008-01-01" + "/" + "2018-01-01",
-            "2018-01-01" + "/" + date_tomorrow,
-        ]
+        # Date tomorrow
+        date_tomorrow = (datetime.date.today() + datetime.timedelta(days=1)).strftime(
+            "%Y-%m-%d"
+        )
 
-    # Make an account on frost.met.no and paste client_id here
-    client_id = st.secrets.frost_client_id
+        # Define reference time for each source
+        if source_sn != "SN99875":
+            reference_times = [source["startDate"] + "/" + date_tomorrow]
+        else:
+            reference_times = [
+                source["startDate"] + "/" + "2008-01-01",
+                "2008-01-01" + "/" + "2018-01-01",
+                "2018-01-01" + "/" + date_tomorrow,
+            ]
 
-    data_allTimes = 0
-    for j in range(len(reference_times)):
-        # Define endpoint and parameters
-        endpoint = "https://frost.met.no/observations/v0.jsonld"
-        parameters = {
-            "sources": source_sn,
-            "elements": "soil_temperature",
-            "referencetime": reference_times[j],
-        }
+        # Make an account on frost.met.no and paste client_id here
+        client_id = st.secrets.frost_client_id
 
-        # Issue an HTTP GET request
-        r = requests.get(endpoint, parameters, auth=(client_id, ""))
+        data_allTimes = 0
+        for j in range(len(reference_times)):
+            # Define endpoint and parameters
+            endpoint = "https://frost.met.no/observations/v0.jsonld"
+            parameters = {
+                "sources": source_sn,
+                "elements": "soil_temperature",
+                "referencetime": reference_times[j],
+            }
 
-        # Extract JSON data
-        json_data = r.json()
+            # Issue an HTTP GET request
+            r = requests.get(endpoint, parameters, auth=(client_id, ""))
 
-        # Check if the request worked, print out any errors
-        if r.status_code == 200:
-            data = json_data["data"]
+            # Extract JSON data
+            json_data = r.json()
 
-            # Paste data from different reference times together (limit on observations per request)
-            if j == 0:
-                data_allTimes = data
+            # Check if the request worked, print out any errors
+            if r.status_code == 200:
+                data = json_data["data"]
+
+                # Paste data from different reference times together (limit on observations per request)
+                if j == 0:
+                    data_allTimes = data
+                else:
+                    data_allTimes = data_allTimes + data
             else:
-                data_allTimes = data_allTimes + data
+                raise Exception(
+                    f"Data retrieval failed with status code {r.status_code}: {json_data.get('error', 'No error message')}"
+                )
 
-    data_allTimes = data_allTimes
+        data_allTimes = data_allTimes
+    except Exception as e:
+        logger.error(f"Error during data retrieval: {e}")
+        return None
 
     return data_allTimes
 
 
-def MET_data_to_dataframe(data):
-    # Load data into Dataframe
-    flattened_data = []
-    for entry in data:
-        for obs in entry["observations"]:
-            record = {
-                "referenceTime": entry["referenceTime"],
-                "depth": obs["level"]["value"],
-                "depthUnit": obs["level"]["unit"],
-                "measurementType": obs["elementId"],
-                "value": obs["value"],
-                "unit": obs.get("unit"),
-                "sourceId": entry["sourceId"],
-            }
-            flattened_data.append(record)
+def MET_data_to_dataframe(data) -> pd.DataFrame:
+    assert data is not None, "No data to convert to DataFrame"
 
-    df = pd.DataFrame(flattened_data)
+    try:
+        # Load data into Dataframe
+        flattened_data = []
+        for entry in data:
+            for obs in entry["observations"]:
+                record = {
+                    "referenceTime": entry["referenceTime"],
+                    "depth": obs["level"]["value"],
+                    "depthUnit": obs["level"]["unit"],
+                    "measurementType": obs["elementId"],
+                    "value": obs["value"],
+                    "unit": obs.get("unit"),
+                    "sourceId": entry["sourceId"],
+                }
+                flattened_data.append(record)
 
-    #########################
-    ### Small adjustments ###
-    #########################
+        df = pd.DataFrame(flattened_data)
 
-    # Convert referenceTime to datetime
-    df["referenceTime"] = pd.to_datetime(df["referenceTime"], format="ISO8601")
+        #########################
+        ### Small adjustments ###
+        #########################
 
-    # Sort and reset index
-    df = df.sort_values(by=["referenceTime", "depth"])
-    df = df.reset_index(drop=True)
+        # Convert referenceTime to datetime
+        df["referenceTime"] = pd.to_datetime(df["referenceTime"], format="ISO8601")
 
-    # Replace meaurement type naming
-    df["measurementType"] = df["measurementType"].replace(
-        "soil_temperature", "Temperature"
-    )
+        # Sort and reset index
+        df = df.sort_values(by=["referenceTime", "depth"])
+        df = df.reset_index(drop=True)
 
-    # Replace faulty values with NaN
-    df.loc[df["value"] > 30, "value"] = np.nan
-    df.loc[df["value"] < -30, "value"] = np.nan
+        # Replace meaurement type naming
+        df["measurementType"] = df["measurementType"].replace(
+            "soil_temperature", "Temperature"
+        )
+
+        # Replace faulty values with NaN
+        df.loc[df["value"] > 30, "value"] = np.nan
+        df.loc[df["value"] < -30, "value"] = np.nan
+    except Exception as e:
+        logger.error(f"Error during data processing: {e}")
+        return None
 
     return df
 
 
-def data_processing_for_plotting(df):
+def data_processing_for_plotting(df: pd.DataFrame) -> pd.DataFrame:
     # Process data for plotting purposes
 
     #########################################
