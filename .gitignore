@@ -1,7 +1,48 @@
-.streamlit/secrets.toml
-tests/
-LyBQuatMap10k_Rubensdotter_2022_EPSG32633.geojson
-__pychache__/
-*.pyc
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+/dist/
+/build/
+*.egg-info/
+*.egg
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE
+.idea/
 .vscode/
-.vscode/settings.json
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/
+!/.streamlit/secrets.toml.example
+*.toml
+!**/secrets.toml.example
+
+# Data
+*.csv
+*.json
+*.parquet
+/data/
+LyBQuatMap10k_Rubensdotter_2022_EPSG32633.geojson
+
+# Environment and logs
+.env*
+!.env.example
+*.log
+
+# Tests
+tests/
