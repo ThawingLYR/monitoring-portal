@@ -29,7 +29,7 @@ Thumbs.db
 # Environment and secrets
 .env*
 !*.example
-*.toml
+*secrets.toml
 !**/secrets.toml.example
 *.log
 
