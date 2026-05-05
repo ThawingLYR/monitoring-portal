@@ -4,11 +4,17 @@ from loguru import logger
 
 try:
     from dotenv import load_dotenv
+    import os
 
-    load_dotenv()
-    logger.info("Environment variables loaded from .env file")
+    if os.path.exists(".env"):
+        load_dotenv()
+        logger.success("Environment variables loaded from .env file")
+    else:
+        logger.warning(
+            ".env file not found, skipping .env loading and defaulting to system environment variables or streamlit secrets"
+        )
 except ImportError:
-    logger.warning("python-dotenv not installed, skipping .env loading")
+    logger.info("python-dotenv not installed, skipping .env loading")
     pass
 
 
