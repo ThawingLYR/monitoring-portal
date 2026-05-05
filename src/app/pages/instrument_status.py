@@ -7,7 +7,7 @@ from streamlit_folium import st_folium
 from src.app.reusable.folium_basemap import get_folium_basemap
 
 # from sources_boreholes_Tilsig import
-from functions_instrument_status import instrument_status_Tilsig
+from src.app.loader.functions_instrument_status import instrument_status_Tilsig
 from sources_weather_stations_Tilsig import (
     sources_tilsig,
     marker_tilsig_coordinates,
