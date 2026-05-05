@@ -1,6 +1,7 @@
 # Imports
-import streamlit as st
 import requests
+
+from src.app.auth.tilsig import get_bearer_token as get_tilsig_bearer_token
 
 #########################
 ### Instrument status ###
@@ -9,35 +10,7 @@ import requests
 
 def instrument_status_Tilsig(sources_tilsig):
 
-    ######################
-    ### Authentication ###
-    ######################
-
-    # Define the Where2O API endpoint and your credentials
-    endpoint = "https://api.tilsig.com/v1/authentication/authenticate"
-    username = st.secrets.tilsig_username
-    password = st.secrets.tilsig_password
-
-    # Define the data and headers for the token request
-    user_data = {
-        "username": username,
-        "password": password,
-    }
-
-    headers = {
-        "accept": "application/json",
-        "Content-Type": "application/json",
-    }
-
-    # Send the token request
-    response = requests.post(endpoint, json=user_data, headers=headers)
-
-    # Check if request succeeded and retrieve token
-    if response.status_code == 200:
-        token_data = response.json()
-        access_token = token_data["token"]
-    else:
-        print("Error! Returned status code %s" % response.status_code)
+    access_token = get_tilsig_bearer_token()
 
     ####################
     ### Data request ###
