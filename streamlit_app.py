@@ -2,20 +2,23 @@ import streamlit as st
 
 from loguru import logger
 
-try:
-    from dotenv import load_dotenv
-    import os
+if "env_loaded" not in st.session_state:
+    try:
+        from dotenv import load_dotenv
+        import os
 
-    if os.path.exists(".env"):
-        load_dotenv()
-        logger.success("Environment variables loaded from .env file")
-    else:
-        logger.warning(
-            ".env file not found, skipping .env loading and defaulting to system environment variables or streamlit secrets"
-        )
-except ImportError:
-    logger.info("python-dotenv not installed, skipping .env loading")
-    pass
+        if os.path.exists(".env"):
+            load_dotenv()
+            logger.success("Environment variables loaded from .env file")
+        else:
+            logger.warning(
+                ".env file not found, skipping .env loading and defaulting to system environment variables or streamlit secrets"
+            )
+    except ImportError:
+        logger.info("python-dotenv not installed, skipping .env loading")
+        pass
+
+    st.session_state.env_loaded = True
 
 
 home_page = st.Page("src/app/pages/about.py", title="About", icon=":material/home:")
