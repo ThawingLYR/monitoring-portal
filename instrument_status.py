@@ -4,13 +4,14 @@ import streamlit as st
 import folium
 from streamlit_folium import st_folium
 
-from sources_boreholes_Tilsig import (
+# from sources_boreholes_Tilsig import
+from functions_instrument_status import instrument_status_Tilsig
+from sources_weather_stations_Tilsig import (
     sources_tilsig,
     marker_tilsig_coordinates,
     marker_tilsig_html,
     marker_tilsig_tooltip,
 )
-from functions_instrument_status import instrument_status_Tilsig
 
 # Set page configuration
 st.set_page_config(page_title="Ground temperature data visualization", layout="wide")
