@@ -1,16 +1,11 @@
 # Imports
 import streamlit as st
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 import requests
-import datetime
-from datetime import timedelta
-from sources_boreholes_Tilsig import *
 
 #########################
 ### Instrument status ###
 #########################
+
 
 def instrument_status_Tilsig(sources_tilsig):
 
@@ -42,24 +37,21 @@ def instrument_status_Tilsig(sources_tilsig):
         token_data = response.json()
         access_token = token_data["token"]
     else:
-        print('Error! Returned status code %s' % response.status_code)
-        
+        print("Error! Returned status code %s" % response.status_code)
+
     ####################
     ### Data request ###
     ####################
 
     # Define headers
-    headers = {
-        "accept": "application/json",
-        "Authorization": "Bearer "+access_token
-        }
+    headers = {"accept": "application/json", "Authorization": "Bearer " + access_token}
 
     # Define the Tilsig endpoint and parameters
     endpoint = "https://api.tilsig.com/v1/device/all"
     parameters = {
-        'sensors': 'true',
-        'station': 'true',
-        }
+        "sensors": "true",
+        "station": "true",
+    }
 
     # Issue an HTTP GET request
     response = requests.get(endpoint, parameters, headers=headers)
