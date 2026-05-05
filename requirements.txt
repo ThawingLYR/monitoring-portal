@@ -1,8 +1,0 @@
-streamlit
-pandas
-numpy
-matplotlib
-requests
-datetime
-folium
-streamlit_folium
