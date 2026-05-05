@@ -13,4 +13,7 @@ uv sync --dev
 
 # Install the pre-commit hooks
 pre-commit install
+
+# Run the application
+streamlit run streamlit_app.py
 ```
