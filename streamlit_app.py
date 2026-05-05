@@ -3,7 +3,7 @@ import streamlit as st
 home_page = st.Page("about.py", title="About", icon=":material/home:")
 
 ground_temperature = st.Page(
-    "main_boreholes_temperature.py",
+    "src/app/pages/main_boreholes_temperature.py",
     title="Ground temperature",
     default=True,
     icon=":material/thermostat:",
