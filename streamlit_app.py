@@ -1,5 +1,17 @@
 import streamlit as st
 
+from loguru import logger
+
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    logger.info("Environment variables loaded from .env file")
+except ImportError:
+    logger.warning("python-dotenv not installed, skipping .env loading")
+    pass
+
+
 home_page = st.Page("src/app/pages/about.py", title="About", icon=":material/home:")
 
 ground_temperature = st.Page(
