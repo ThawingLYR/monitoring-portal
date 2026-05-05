@@ -3,9 +3,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import datetime
 
+from loguru import logger
 
-def plot_1(df):
+
+def plot_tempVStime_shallowest_depth(df: pd.DataFrame):
     # Temperature vs. time for shallowest depth: overlaying years
+
+    logger.info("Plotting temperature vs. time for shallowest depth")
 
     # Add year and day columns for plotting
     df["year"] = df["referenceTime"].dt.year
@@ -73,6 +77,8 @@ def plot_1(df):
     plt.legend(title="Year", loc="upper right")
     plt.tight_layout()
 
+    logger.success("Finished plotting temperature vs. time for shallowest depth")
+
     return fig
 
 
@@ -84,8 +90,10 @@ def find_closest_int(array, target_value):
     return closest_int
 
 
-def plot_2(df):
+def plot_tempVStime_1_shallow_depth(df: pd.DataFrame):
     # Temperature vs. time for 1 shallow depth: overlaying years
+
+    logger.info("Plotting temperature vs. time for 1 shallow depth")
 
     if len(df["depth"].unique()) > 1:
         # Add year and day columns for plotting
@@ -152,15 +160,21 @@ def plot_2(df):
         plt.grid(axis="y")
         plt.legend(title="Year", loc="upper right")
         plt.tight_layout()
+        logger.success("Finished plotting temperature vs. time for 1 shallow depth")
 
     else:
+        logger.warning(
+            "Not enough data to plot temperature vs. time for 1 shallow depth"
+        )
         fig = plt.figure(figsize=(10, 6))
 
     return fig
 
 
-def plot_3(df):
+def plot_annual_trumpet_summer_winter(df: pd.DataFrame):
     # Annual trumpet curves for the summer and winter seasons
+
+    logger.info("Plotting annual trumpet curves for the summer and winter seasons")
 
     # Initialize empty season column
     df["season"] = None
@@ -261,11 +275,16 @@ def plot_3(df):
     plt.grid(True)
     plt.tight_layout()
 
+    logger.success(
+        "Finished plotting annual trumpet curves for the summer and winter seasons"
+    )
+
     return fig
 
 
-def plot_4(df):
+def plot_latest_temperatuer_profile_past_same_date(df: pd.DataFrame):
     # Latest temperature profile and from past same dates
+    logger.info("Plotting latest temperature profile and from past same dates")
 
     # Find corresponding dates and create temperature daily averages
     last_date_month = df["referenceTime"].iloc[-1].strftime("%m")
@@ -317,6 +336,10 @@ def plot_4(df):
     plt.grid(True)
     plt.tight_layout()
 
+    logger.success(
+        "Finished plotting latest temperature profile and from past same dates"
+    )
+
     return fig
 
 
@@ -350,8 +373,10 @@ def find_all_zero_crossings(group):
     return pd.Series({"zero_depths": zero_depths if zero_depths else np.nan})
 
 
-def plot_5_6(df):
+def plot_iso0_development_all_and_deepest(df):
     # Find 0 °C isotherm
+
+    logger.info("Plotting 0 °C isotherm development: all and only deepest 0 °C")
 
     # Group and find all zero crossings
     df_isotherm_all = (
@@ -467,11 +492,17 @@ def plot_5_6(df):
     plt.legend(title="Year", loc="upper right")
     plt.tight_layout()
 
+    logger.success(
+        "Finished plotting 0 °C isotherm development: all and only deepest 0 °C crossings"
+    )
+
     return fig1, fig2
 
 
-def plot_7_8(df):
+def plot_contour_temperature_depths_times(df):
     # Contour plot of temperatures for all depths and times
+
+    logger.info("Plotting contour plot of temperatures for all depths and times")
 
     depths = np.unique(df["depth"])
     if len(depths) > 1:
@@ -556,5 +587,9 @@ def plot_7_8(df):
         )
     else:
         fig2 = plt.figure(figsize=(10, 6))
+
+    logger.success(
+        "Finished plotting contour plot of temperatures for all depths and times"
+    )
 
     return fig1, fig2
