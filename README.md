@@ -1,5 +1,6 @@
 # 🚀 ThawingLYR Monitoring Portal
 
+<div align="center">
 
 Your all-in-one solution for permafrost monitoring in Longyearbyen.
 
@@ -11,6 +12,8 @@ Your all-in-one solution for permafrost monitoring in Longyearbyen.
 
 
 Built with ❤️ at <a href="https://www.unis.no">UNIS</a> by the <a href="https://thawinglyr.com">ThawingLYR</a> project.
+
+</div>
 
 
 
