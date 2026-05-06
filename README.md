@@ -5,8 +5,9 @@
 </p>
 
 <p style="text-align: center;">
-  <img src="https://thawinglyr.com/wp-content/uploads/2026/05/cropped-thawinglyr_v3_b-scaled-1.png" alt="ThawingLYR Logo" style="width: 300px;" />
+    <img width="40%" src="https://thawinglyr.com/wp-content/uploads/2026/05/cropped-thawinglyr_v3_b-scaled-1.png">
 </p>
+
 
 <p style="text-align: center;">
   Built with ❤️ at <a href="https://www.unis.no">UNIS</a> by the <a href="https://thawinglyr.com">ThawingLYR</a> project.
