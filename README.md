@@ -1,28 +1,48 @@
 # 🚀 ThawingLYR Monitoring Portal
 
+**<center> Your all-in-one solution for permafrost monitoring in Longyearbyen.</center>**
+
 <div style="text-align: center;">
   <img src="https://thawinglyr.com/wp-content/uploads/2026/05/cropped-thawinglyr_v3_b-scaled-1.png" alt="ThawingLYR Logo" style="width: 300px;" />
 </div>
 
-**Your all-in-one solution for permafrost monitoring in Longyearbyen.**  
-Built with ❤️ at [UNIS](https://www.unis.no) by the [ThawingLYR](https://thawinglyr.com) project.
----
+
+<center>Built with ❤️ at <a href="https://www.unis.no">UNIS</a> by the <a href="https://thawinglyr.com">ThawingLYR</a> project.</center>
+
+
 
 ## 📌 About the Project
 
 The **Monitoring Portal** is a **Streamlit-based** application developed as part of the **ThawingLYR** initiative. This project aims to **build an integrated climate and permafrost response system**, delivering **real-time data on permafrost, terrain movement, and weather** in Longyearbyen. The portal provides **live dashboards** to help researchers, local authorities, and communities **predict, manage, and mitigate risks** posed by thawing permafrost.
----
+
 
 ## 🌍 About ThawingLYR
 
 This portal is part of **[ThawingLYR](https://github.com/ThawingLYR)**, a **3-year research project (2025–2027)** funded by the **Research Council of Norway** and led by the **University Centre in Svalbard (UNIS)**. The project combines **mapping, monitoring, modelling, and local knowledge** to address the urgent challenges of thawing permafrost in Arctic settlements.
 
-🔗 **Collaborators:**
 
+## 🤝 Partners
 
-UNIS, Nordland Research Institute, Nord University, Norwegian University of Life Sciences, MET Norway, NORSAR, Longyearbyen Lokalstyre, Svalbard Museum, Instanes AS, and Tilsig AS.
+<div style="background-color: white; padding: 5px; border-radius: 10px; margin: 10px 0;">
 
----
+<div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
+  <img src="https://thawinglyr.com/wp-content/uploads/2025/08/unis-hovedlogo-mtxt.png-1-1.webp" alt="UNIS" style="height: 60px;" />
+  <img src="https://thawinglyr.com/wp-content/uploads/2025/08/logo-nb-1-1024x170.png" alt="Nordland Research Institute" style="height: 60px;" />
+  <img src="https://thawinglyr.com/wp-content/uploads/2025/08/Nord_University_logo.svg_-1024x366.png" alt="Nord University" style="height: 60px;" />
+  <img src="https://thawinglyr.com/wp-content/uploads/2025/08/NMBU_logo_rgb_Primary_logo-1024x538.jpg" alt="NMBU" style="height: 60px;" />
+  <img src="https://thawinglyr.com/wp-content/uploads/2025/08/Met_RGB_Horisontal_ENG-1.jpg" alt="MET Norway" style="height: 60px;" />
+</div>
+
+<div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;">
+  <img src="https://thawinglyr.com/wp-content/uploads/2025/08/Screenshot-2025-08-30-at-14.11.54-1024x208.png" alt="Longyearbyen Lokalstyre" style="height: 60px;" />
+  <img src="https://thawinglyr.com/wp-content/uploads/2025/08/5075667_2009841.jpg" alt="Svalbard Museum" style="height: 60px;" />
+  <img src="https://thawinglyr.com/wp-content/uploads/2025/08/244_662340674.jpg" alt="Instanes AS" style="height: 60px;" />
+  <img src="https://thawinglyr.com/wp-content/uploads/2025/08/Screenshot-2025-08-30-at-14.07.15.png" alt="NORSAR" style="height: 60px;" />
+  <img src="https://thawinglyr.com/wp-content/uploads/2025/08/Screenshot-2025-08-30-at-14.09.50.png" alt="Tilsig AS" style="height: 60px;" />
+</div>
+
+</div>
+
 
 ## 🛠️ Getting Started
 
@@ -32,8 +52,6 @@ UNIS, Nordland Research Institute, Nord University, Norwegian University of Life
 - [UV](https://github.com/astral-sh/uv) (for dependency management)
 - Docker (for containerized deployment)
 - Git
-
----
 
 ### API Keys
 
@@ -46,8 +64,6 @@ Please contact the [project maintainers](https://github.com/ThawingLYR/monitorin
 
 
 > 🔑 **Note:** Store your API keys securely in the `.env` file (see `.env.example` for the required format).
-
----
 
 ## 💻 Development
 
@@ -70,8 +86,6 @@ streamlit run streamlit_app.py
 ```
 
 Your local dev server will be available at `http://localhost:8501`.
-
----
 
 ## 🐳 Docker Deployment
 
@@ -97,8 +111,6 @@ For **production** or **local testing**, use the provided Docker container.
 > [!IMPORTANT]  
 > **For production**, run the app behind a reverse proxy (e.g., [Caddy](https://caddyserver.com/)) to handle **TLS termination** and ensure secure connections.
 
----
-
 ## 🚀 Releases & Container Registry
 
 When a **GitHub Release** is published, the Docker image is **automatically built and pushed** to the [GitHub Container Registry (GHCR)](https://ghcr.io/).
@@ -112,8 +124,6 @@ docker run -p 8501:8501 --env-file .env -v cached-data:/streamlit-app/cached-dat
 
 > 💡 **Pro Tip:** The `cached-data` volume persists locally cached data between container restarts.
 
----
-
 ## 🤝 Contributing
 
 We welcome contributions! Here’s how you can help:
@@ -126,23 +136,15 @@ We welcome contributions! Here’s how you can help:
 
 > 📜 **Note:** Ensure your code passes `pre-commit` checks before submitting.
 
----
-
 ## 📜 License
 
 This project is licensed under the **EUPL 1.2**. See the LICENCE file for details.
-
----
 
 ## 🆘 Support & Feedback
 
 - **Found a bug?** [Open an issue](https://github.com/ThawingLYR/monitoring-portal/issues).
 - **Have a feature request?** Share it in [Discussions](https://github.com/ThawingLYR/monitoring-portal/discussions)
 
----
-
 **🌟 Star this repo if you find it useful!**
-
----
 
 📅 **Project Timeline:** 2025–2027 | 🏢 **Lead Institution:** [UNIS](https://www.unis.no) | 💰 **Funding:** Research Council of Norway
