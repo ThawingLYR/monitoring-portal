@@ -32,18 +32,18 @@ This portal is part of **[ThawingLYR](https://github.com/ThawingLYR)**, a **3-ye
 
 <div align="center">
 
-    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
-    <img src="https://thawinglyr.com/wp-content/uploads/2025/08/unis-hovedlogo-mtxt.png-1-1.webp" alt="UNIS" style="height: 60px;" />
-    <img src="https://thawinglyr.com/wp-content/uploads/2025/08/logo-nb-1-1024x170.png" alt="Nordland Research Institute" style="height: 60px;" />
-    <img src="https://thawinglyr.com/wp-content/uploads/2025/08/Nord_University_logo.svg_-1024x366.png" alt="Nord University" style="height: 60px;" />
-    <img src="https://thawinglyr.com/wp-content/uploads/2025/08/NMBU_logo_rgb_Primary_logo-1024x538.jpg" alt="NMBU" style="height: 60px;" />
-    <img src="https://thawinglyr.com/wp-content/uploads/2025/08/Met_RGB_Horisontal_ENG-1.jpg" alt="MET Norway" style="height: 60px;" />
-    <img src="https://thawinglyr.com/wp-content/uploads/2025/08/Screenshot-2025-08-30-at-14.11.54-1024x208.png" alt="Longyearbyen Lokalstyre" style="height: 60px;" />
-    <img src="https://thawinglyr.com/wp-content/uploads/2025/08/5075667_2009841.jpg" alt="Svalbard Museum" style="height: 60px;" />
-    <img src="https://thawinglyr.com/wp-content/uploads/2025/08/244_662340674.jpg" alt="Instanes AS" style="height: 60px;" />
-    <img src="https://thawinglyr.com/wp-content/uploads/2025/08/Screenshot-2025-08-30-at-14.07.15.png" alt="NORSAR" style="height: 60px;" />
-    <img src="https://thawinglyr.com/wp-content/uploads/2025/08/Screenshot-2025-08-30-at-14.09.50.png" alt="Tilsig AS" style="height: 60px;" />
-    </div>
+<div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
+<img src="https://thawinglyr.com/wp-content/uploads/2025/08/unis-hovedlogo-mtxt.png-1-1.webp" alt="UNIS" style="height: 60px;" />
+<img src="https://thawinglyr.com/wp-content/uploads/2025/08/logo-nb-1-1024x170.png" alt="Nordland Research Institute" style="height: 60px;" />
+<img src="https://thawinglyr.com/wp-content/uploads/2025/08/Nord_University_logo.svg_-1024x366.png" alt="Nord University" style="height: 60px;" />
+<img src="https://thawinglyr.com/wp-content/uploads/2025/08/NMBU_logo_rgb_Primary_logo-1024x538.jpg" alt="NMBU" style="height: 60px;" />
+<img src="https://thawinglyr.com/wp-content/uploads/2025/08/Met_RGB_Horisontal_ENG-1.jpg" alt="MET Norway" style="height: 60px;" />
+<img src="https://thawinglyr.com/wp-content/uploads/2025/08/Screenshot-2025-08-30-at-14.11.54-1024x208.png" alt="Longyearbyen Lokalstyre" style="height: 60px;" />
+<img src="https://thawinglyr.com/wp-content/uploads/2025/08/5075667_2009841.jpg" alt="Svalbard Museum" style="height: 60px;" />
+<img src="https://thawinglyr.com/wp-content/uploads/2025/08/244_662340674.jpg" alt="Instanes AS" style="height: 60px;" />
+<img src="https://thawinglyr.com/wp-content/uploads/2025/08/Screenshot-2025-08-30-at-14.07.15.png" alt="NORSAR" style="height: 60px;" />
+<img src="https://thawinglyr.com/wp-content/uploads/2025/08/Screenshot-2025-08-30-at-14.09.50.png" alt="Tilsig AS" style="height: 60px;" />
+</div>
 
 </div>
 
