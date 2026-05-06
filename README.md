@@ -38,7 +38,7 @@ docker build -t monitoring-portal .
 Then run the image
 
 ```bash
-docker run -p 8501:8501 --env-file .env -v cached-data:/streamlet-app/cached-data monitoring-portal
+docker run -p 8501:8501 --env-file .env -v cached-data:/streamlit-app/cached-data monitoring-portal
 ```
 
 and the application will be available on [http://localhost:8501](http://localhost:8501).
@@ -54,7 +54,7 @@ The image can be used with
 
 ```bash
 docker pull ghcr.io/thawinglyr/monitoring-portal:latest
-docker run -p 8501:8501 --env-file .env -v cached-data:/streamlet-app/cached-data ghcr.io/thawinglyr/monitoring-portal:latest
+docker run -p 8501:8501 --env-file .env -v cached-data:/streamlit-app/cached-data ghcr.io/thawinglyr/monitoring-portal:latest
 ```
 
 The `cached-data` folder can be used to store locally cached data.

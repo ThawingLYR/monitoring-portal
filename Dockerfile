@@ -3,21 +3,21 @@ ARG VERSION=0.X.X
 
 # Stage 1: Dependency resolution
 FROM astral/uv:python${PYTHON_VERSION}-bookworm-slim AS uv
-WORKDIR /streamlet-app
+WORKDIR /streamlit-app
 COPY pyproject.toml .
 RUN uv pip compile pyproject.toml > requirements.txt
 
 # Stage 2: Build
 FROM python:${PYTHON_VERSION}-slim AS builder
-WORKDIR /streamlet-app
-COPY --from=uv /streamlet-app/requirements.txt .
+WORKDIR /streamlit-app
+COPY --from=uv /streamlit-app/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Stage 3: Runtime
 FROM python:${PYTHON_VERSION}-slim
 ARG VERSION
 ARG PYTHON_VERSION
-WORKDIR /streamlet-app
+WORKDIR /streamlit-app
 
 # Copy only necessary files from the builder stage
 COPY --from=builder /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages

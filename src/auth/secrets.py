@@ -24,7 +24,7 @@ def get_secret(secret_name: str) -> str:
         return secret
 
     secret = st.secrets.get(secret_name)
-    logger.debug("Using streamlet secrets for secret: {}", secret_name)
+    logger.debug("Using streamlit secrets for secret: {}", secret_name)
 
     if secret is None:
         logger.error(
