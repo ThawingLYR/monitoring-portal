@@ -1,0 +1,53 @@
+# Git
+.git/
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+venv/
+env/
+.venv/
+dist/
+build/
+*.egg-info/
+*.egg
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment and secrets
+.env*
+!*.example
+*secrets.toml
+!**/secrets.toml.example
+*.log
+
+# Data
+*.csv
+*.json
+*.parquet
+/data/
+LyBQuatMap10k_Rubensdotter_2022_EPSG32633.geojson
+
+# Tests
+tests/
+
+# Streamlit
+.streamlit/
+!/.streamlit/secrets.toml.example
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml

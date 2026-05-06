@@ -7,7 +7,8 @@ import pandas as pd
 
 from loguru import logger
 
-from src.app.auth.tilsig import get_bearer_token as get_tilsig_bearer_token
+from src.auth.tilsig import get_bearer_token as get_tilsig_bearer_token
+from src.auth.secrets import get_secret
 
 ##################################################
 ### Data loading from Tilsig and MET functions ###
@@ -150,7 +151,7 @@ def load_data_MET(source: str):
             ]
 
         # Make an account on frost.met.no and paste client_id here
-        client_id = st.secrets.frost_client_id
+        client_id = get_secret("frost_client_id")
 
         data_allTimes = 0
         for j in range(len(reference_times)):

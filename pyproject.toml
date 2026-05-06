@@ -20,5 +20,6 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pre-commit>=4.6.0",
+    "python-dotenv>=1.2.2",
     "ruff>=0.15.12",
 ]
