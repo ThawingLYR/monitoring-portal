@@ -15,7 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Stage 3: Runtime
 FROM python:${PYTHON_VERSION}-slim
-ARG API_VERSION
+ARG VERSION
 ARG PYTHON_VERSION
 WORKDIR /streamlet-app
 
@@ -25,7 +25,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy application code
 COPY . .
-RUN echo "VERSION = '${API_VERSION}'" > ./src/app/version.py
+RUN echo "VERSION = '${VERSION}'" > ./src/app/version.py
 
 EXPOSE 8501
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
