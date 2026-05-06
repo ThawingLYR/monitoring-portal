@@ -30,7 +30,7 @@ This portal is part of **[ThawingLYR](https://github.com/ThawingLYR)**, a **3-ye
 
 ## 🤝 Partners
 
-<div align="center">
+<div align="center" style="background-color: white; padding: 10px;">
 
 <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
 <img src="https://thawinglyr.com/wp-content/uploads/2025/08/unis-hovedlogo-mtxt.png-1-1.webp" alt="UNIS" style="height: 60px;" />
