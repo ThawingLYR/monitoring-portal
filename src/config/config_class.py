@@ -1,7 +1,9 @@
 from pydantic import BaseModel
-from typing import Literal
+from typing import Dict, Literal
 
 from folium import Icon, Marker, Popup, Html
+
+from datetime import datetime
 
 
 # Define all possible type of stations.
@@ -21,6 +23,13 @@ class StationMarkers(BaseModel):
     icon: str = "cloud"
 
 
+class StationSensors(BaseModel):
+    sensorID: str
+    startDate: datetime
+    endDate: datetime | None = None
+    depth: Dict[int, float] | None = None
+
+
 class StationConfig(BaseModel):
     sourceID: str
     name: str
@@ -31,6 +40,7 @@ class StationConfig(BaseModel):
     owner: str = "Unknown"
     marker: StationMarkers = StationMarkers()
     dataProvider: DataProvider = "frost"
+    sensors: list[StationSensors] = []
 
     def get_icon(self):
         return Icon(color=self.marker.color, icon=self.marker.icon)
