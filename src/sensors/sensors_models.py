@@ -21,9 +21,15 @@ from datetime import datetime
 import tempfile
 from abc import abstractmethod, ABC
 from src.config.config_class import StationConfig
-from typing import Optional
+from src.plots.figure_models import Figure
+from src.utils.object_name import get_full_class_name
+from typing import Optional, Type
 import os
+import json
 from loguru import logger
+
+import plotly.io as pio
+import plotly.graph_objects as go
 
 
 class SensorData(BaseModel):
@@ -81,7 +87,8 @@ class Sensor(BaseModel, ABC):
 
     config: StationConfig
     data: SensorData | None = None
-    folder: str | None = None
+    data_folder: str | None = None
+    figure_folder: str | None = None
 
     def __init__(self, **data):
         """
@@ -92,23 +99,34 @@ class Sensor(BaseModel, ABC):
         they are loaded into the `data` attribute.
         """
         super().__init__(**data)
-        self.folder = os.path.join(
+        self.data_folder = os.path.join(
             os.getenv("DATA_DIR", "data/"), self.config.sourceType, self.config.sourceID
         )
-        if not os.path.exists(self.folder):
-            os.makedirs(self.folder)
+        if not os.path.exists(self.data_folder):
+            os.makedirs(self.data_folder)
             logger.info(
-                f"Created folder for sensor data: {self.folder}. No data file exists yet."
+                f"Created folder for sensor data: {self.data_folder}. No data file exists yet."
             )
 
-        if os.listdir(self.folder):
+        self.data_folder = os.path.join(
+            os.getenv("FIG_DIR", "figure/"),
+            self.config.sourceType,
+            self.config.sourceID,
+        )
+        if not os.path.exists(self.figure_folder):
+            os.makedirs(self.figure_folder)
             logger.info(
-                f"Loading existing data for sensor {self.config.sourceID} from {self.folder}."
+                f"Created folder for sensor figures: {self.data_folder}. No data file exists yet."
+            )
+
+        if os.listdir(self.data_folder):
+            logger.info(
+                f"Loading existing data for sensor {self.config.sourceID} from {self.data_folder}."
             )
             self.data = SensorData(
                 SensorID=f"{self.config.sourceType}_{self.config.sourceID}",
                 data=dd.read_parquet(
-                    os.path.join(self.folder, "*.parquet"),
+                    os.path.join(self.data_folder, "*.parquet"),
                     engine="pyarrow",
                     index_col=0,
                 ),
@@ -116,7 +134,7 @@ class Sensor(BaseModel, ABC):
             )
         else:
             logger.info(
-                f"No existing data found for sensor {self.config.sourceID} in {self.folder}. Starting with empty data."
+                f"No existing data found for sensor {self.config.sourceID} in {self.data_folder}. Starting with empty data."
             )
             self.data = SensorData(
                 SensorID=f"{self.config.sourceType}_{self.config.sourceID}",
@@ -154,7 +172,7 @@ class Sensor(BaseModel, ABC):
 
         for date in dates:
             date_str = date.strftime("%Y-%m-%d")
-            file_path = os.path.join(self.folder, f"{date_str}.parquet")
+            file_path = os.path.join(self.data_folder, f"{date_str}.parquet")
             temp_file_path = None
 
             try:
@@ -188,7 +206,7 @@ class Sensor(BaseModel, ABC):
 
                 # Atomic write: write to temp file first
                 temp_fd, temp_file_path = tempfile.mkstemp(
-                    suffix=".parquet", dir=self.folder
+                    suffix=".parquet", dir=self.data_folder
                 )
                 os.close(temp_fd)
                 updated_data.to_parquet(temp_file_path, engine="pyarrow")
@@ -214,9 +232,9 @@ class Sensor(BaseModel, ABC):
         Raises:
             ValueError: If no data files are found after update.
         """
-        if os.listdir(self.folder):
+        if os.listdir(self.data_folder):
             self.data.data = dd.read_parquet(
-                os.path.join(self.folder, "*.parquet"),
+                os.path.join(self.data_folder, "*.parquet"),
                 engine="pyarrow",
                 index_col=0,
             )
@@ -256,6 +274,111 @@ class Sensor(BaseModel, ABC):
         new_data = self.fetch_data()
         if new_data is not None and not new_data.empty:
             self.update_data(new_data)
+
+    def _get_figure_cache(self, figure_maker_name: str) -> str:
+        """
+        Generates the file path for caching a figure based on the figure maker's class name.
+
+        Args:
+            figure_maker_name (str): The fully qualified class name of the figure maker.
+
+        Returns:
+            str: The absolute path to the JSON file where the figure will be cached.
+
+        Example:
+            >>> self._get_figure_cache("module.FigureMaker")
+            '/path/to/figure_folder/sourceType_sourceID_module.FigureMaker.json'
+        """
+        file_name = (
+            f"{self.config.sourceType}_{self.config.sourceID}_{figure_maker_name}.json"
+        )
+        return os.path.join(self.figure_folder, file_name)
+
+    def prepare_figure(self, figure_maker: Type[Figure]) -> None:
+        """
+        Creates a figure using the provided figure maker, serializes it to JSON, and saves it to disk.
+
+        Args:
+            figure_maker (Type[Figure]): A class (not an instance) that inherits from `Figure`.
+                                        Must implement `create_figure`.
+
+        Raises:
+            FileNotFoundError: If the `figure_folder` does not exist.
+            IOError: If there is an issue writing the file (e.g., permissions).
+            Exception: If the figure cannot be created or serialized.
+
+        Notes:
+            - The figure is cached as a JSON file in `self.figure_folder`.
+            - The filename is derived from the figure maker's class name, `sourceType`, and `sourceID`.
+        """
+        try:
+            # Create and serialize the figure
+            fm = figure_maker()
+            fig_json = fm.create_figure(self).to_json()
+
+            # Get the cache path
+            path = self._get_figure_cache(get_full_class_name(figure_maker))
+
+            # Ensure the directory exists
+            os.makedirs(self.figure_folder, exist_ok=True)
+
+            # Write the JSON to file
+            with open(path, "w") as f:
+                f.write(fig_json)
+
+        except FileNotFoundError as e:
+            logger.error(f"Figure folder not found: {self.figure_folder}. Error: {e}")
+            raise
+        except IOError as e:
+            logger.error(f"Failed to write figure to {path}. Error: {e}")
+            raise
+        except Exception as e:
+            logger.error(
+                f"Failed to prepare figure for {figure_maker.__name__}. Error: {e}"
+            )
+            raise
+
+    def load_figure(self, figure_maker: Type[Figure]) -> go.Figure:
+        """
+        Loads a cached figure from disk and deserializes it into a Plotly `Figure` object.
+
+        Args:
+            figure_maker (Figure): The class of the figure maker used to originally create the figure.
+
+        Returns:
+            plotly.graph_objects.Figure: The deserialized Plotly figure.
+
+        Raises:
+            FileNotFoundError: If the cached figure file does not exist.
+            json.JSONDecodeError: If the cached file contains invalid JSON.
+            Exception: If the figure cannot be deserialized.
+
+        Notes:
+            - The filename is derived from the figure maker's class name, `sourceType`, and `sourceID`.
+        """
+        try:
+            path = self._get_figure_cache(get_full_class_name(figure_maker))
+
+            if not os.path.exists(path):
+                raise FileNotFoundError(f"Cached figure not found at: {path}")
+
+            with open(path, "r") as f:
+                fig_json = f.read()
+                fig = pio.from_json(fig_json)
+
+            return fig
+
+        except FileNotFoundError as e:
+            logger.error(f"Cached figure not found: {e}")
+            raise
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON in cached figure file {path}. Error: {e}")
+            raise
+        except Exception as e:
+            logger.error(
+                f"Failed to load figure for {figure_maker.__name__}. Error: {e}"
+            )
+            raise
 
     @abstractmethod
     def fetch_data(self) -> pd.DataFrame:
