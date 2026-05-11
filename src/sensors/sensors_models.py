@@ -1,24 +1,96 @@
+"""
+Sensor Data Management Module
+
+This module defines the base classes and utilities for managing sensor data, including:
+- Abstract `Sensor` class for fetching, updating, and retrieving sensor data.
+- `SensorData` model for storing and validating sensor data with Dask DataFrames.
+
+Dependencies:
+    - pydantic: For data validation and settings management.
+    - dask.dataframe: For lazy, out-of-core data processing.
+    - pandas: For in-memory data manipulation.
+    - loguru: For structured logging.
+    - tempfile: For atomic file operations.
+    - abc: For abstract base class definitions.
+"""
+
 from pydantic import BaseModel, ConfigDict, model_validator
 import dask.dataframe as dd
 import pandas as pd
 from datetime import datetime
 import tempfile
-
 from abc import abstractmethod, ABC
-
 from src.config.config_class import StationConfig
 from typing import Optional
-
 import os
 from loguru import logger
 
 
+class SensorData(BaseModel):
+    """
+    Represents the data collected by a sensor, stored as a Dask DataFrame.
+
+    Attributes:
+        SensorID (str): Unique identifier for the sensor.
+        data (dd.DataFrame | None): A Dask DataFrame containing the sensor data, with timestamps as the index.
+        update_time (datetime | None): The time when the data was last updated.
+    """
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    SensorID: str
+    data: Optional[dd.DataFrame] = None
+    update_time: Optional[datetime] = None
+
+    @model_validator(mode="after")
+    def check_datetime_index(cls, values):
+        """
+        Validates that the Dask DataFrame has a DatetimeIndex.
+
+        Args:
+            values: The SensorData instance being validated.
+
+        Returns:
+            SensorData: The validated instance.
+
+        Raises:
+            ValueError: If the Dask DataFrame index is not a DatetimeIndex.
+        """
+        if values.data is not None:
+            # Compute the index type (Dask dd.DataFrames are lazy, so we check the meta)
+            if not isinstance(values.data.index._meta, pd.DatetimeIndex):
+                raise ValueError("The Dask dd.DataFrame index must be a DatetimeIndex.")
+        return values
+
+
 class Sensor(BaseModel, ABC):
+    """
+    Abstract base class for all sensor types.
+
+    This class provides core functionality for:
+    - Initializing sensor data storage.
+    - Updating sensor data with new observations.
+    - Retrieving data within a specified time range.
+    - Fetching new data (to be implemented by subclasses).
+
+    Attributes:
+        config (StationConfig): The configuration for the sensor's station.
+        data (SensorData | None): The sensor's data, or None if no data is available.
+        folder (str | None): Path to the folder where the sensor's data is stored.
+    """
+
     config: StationConfig
     data: SensorData | None = None
     folder: str | None = None
 
     def __init__(self, **data):
+        """
+        Initializes the Sensor instance.
+
+        Sets up the data folder for the sensor based on its `sourceType` and `sourceID`.
+        If the folder does not exist, it is created. If existing data files are found,
+        they are loaded into the `data` attribute.
+        """
         super().__init__(**data)
         self.folder = os.path.join(
             os.getenv("DATA_DIR", "data/"), self.config.sourceType, self.config.sourceID
@@ -33,7 +105,6 @@ class Sensor(BaseModel, ABC):
             logger.info(
                 f"Loading existing data for sensor {self.config.sourceID} from {self.folder}."
             )
-
             self.data = SensorData(
                 SensorID=f"{self.config.sourceType}_{self.config.sourceID}",
                 data=dd.read_parquet(
@@ -43,7 +114,6 @@ class Sensor(BaseModel, ABC):
                 ),
                 update_time=datetime.now(),
             )
-
         else:
             logger.info(
                 f"No existing data found for sensor {self.config.sourceID} in {self.folder}. Starting with empty data."
@@ -54,11 +124,22 @@ class Sensor(BaseModel, ABC):
                 update_time=None,
             )
 
-    def update_data(self, new_data: pd.DataFrame):
+    def update_data(self, new_data: pd.DataFrame) -> None:
         """
-        Updates the sensor's data with new data, writing only the relevant date's file.
-        Assumes new_data has a datetime index or a 'timestamp' column.
-        Performs header compatibility check and atomic writing.
+        Updates the sensor's data with new observations, writing each date's data to a separate Parquet file.
+
+        Args:
+            new_data (pd.DataFrame): New data to add. Must have a datetime index or a 'timestamp' column.
+
+        Raises:
+            ValueError: If `new_data` lacks a datetime index or 'timestamp' column.
+            ValueError: If there is a header mismatch between existing and new data for any date.
+            Exception: If an error occurs during file operations (temp files are cleaned up).
+
+        Notes:
+            - Data is partitioned by date (YYYY-MM-DD) and stored as Parquet files.
+            - Uses atomic writes (temp file + rename) to prevent corruption.
+            - Duplicates are resolved by keeping the last observation for each timestamp.
         """
         if not isinstance(new_data.index, pd.DatetimeIndex):
             if "timestamp" in new_data.columns:
@@ -68,7 +149,7 @@ class Sensor(BaseModel, ABC):
                     "new_data must have a datetime index or 'timestamp' column."
                 )
 
-        # Extract dates from the new data
+        # Extract unique dates from the new data
         dates = new_data.index.normalize().unique()
 
         for date in dates:
@@ -101,7 +182,7 @@ class Sensor(BaseModel, ABC):
                 # Filter new_data for this date
                 new_data_for_date = new_data[new_data.index.normalize() == date]
 
-                # Combine existing and new data
+                # Combine existing and new data, keeping the last observation for duplicates
                 updated_data = pd.concat([existing_data, new_data_for_date])
                 updated_data = updated_data[~updated_data.index.duplicated(keep="last")]
 
@@ -123,8 +204,16 @@ class Sensor(BaseModel, ABC):
                     os.remove(temp_file_path)
                 raise e
 
-        # Update the SensorData object
-        self.data.update_time = datetime.now()
+        # Reload the data into the SensorData object
+        self._reload_data()
+
+    def _reload_data(self) -> None:
+        """
+        Reloads the sensor's data from disk after an update.
+
+        Raises:
+            ValueError: If no data files are found after update.
+        """
         if os.listdir(self.folder):
             self.data.data = dd.read_parquet(
                 os.path.join(self.folder, "*.parquet"),
@@ -138,12 +227,18 @@ class Sensor(BaseModel, ABC):
                 "No data files found after update. This should not happen."
             )
 
-    def get_data(self, start_time: datetime, end_time: datetime) -> SensorData | None:
+    def get_data(
+        self, start_time: datetime, end_time: datetime
+    ) -> Optional[pd.DataFrame]:
         """
-        Retrieves the current data stored in the sensor with optionnal filterinf by time range.
+        Retrieves the sensor's data within the specified time range.
+
+        Args:
+            start_time (datetime): Start of the time range (inclusive).
+            end_time (datetime): End of the time range (inclusive).
 
         Returns:
-            SensorData | None: The current sensor data, or None if no data is available.
+            pd.DataFrame | None: The filtered data as a pandas DataFrame, or None if no data is available.
         """
         if self.data is None or self.data.data is None:
             logger.warning(
@@ -151,41 +246,27 @@ class Sensor(BaseModel, ABC):
             )
             return None
 
-        # Filter data by time range if specified
+        # Filter data by time range and compute the result
         return self.data.data.loc[start_time:end_time].compute()
 
-    def update_latest_data(self):
-        self.update_data(self.fetch_data)
+    def update_latest_data(self) -> None:
+        """
+        Fetches the latest data (from the last cached timestamp to now) and updates the sensor's data.
+        """
+        new_data = self.fetch_data()
+        if new_data is not None and not new_data.empty:
+            self.update_data(new_data)
 
     @abstractmethod
     def fetch_data(self) -> pd.DataFrame:
         """
-        Abstract method to fetch new data for the sensor. This method should be implemented by subclasses to define how data is fetched for specific sensor types.
-        This method should return a dataframe with the data from the latest cached datapoint to now
+        Abstract method to fetch new data for the sensor.
+
+        Subclasses must implement this method to define how data is fetched
+        (e.g., from an API, database, or file). The returned DataFrame should
+        contain data from the last cached timestamp to the present.
+
+        Returns:
+            pd.DataFrame: A DataFrame with new sensor data, indexed by timestamp.
         """
         pass
-
-
-class SensorData(BaseModel):
-    """
-    Represents the data collected by a sensor.
-
-    Attributes:
-        sensorID (str): Unique identifier for the sensor.
-        data (Daskdd.DataFrame): A Dask dd.DataFrame containing the sensor data, with timestamps as the index.
-        update_time (datetime): The time when the data was last updated.
-    """
-
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
-    SensorID: str
-    data: Optional[dd.DataFrame] = None
-    update_time: Optional[datetime] = None
-
-    @model_validator(mode="after")
-    def check_datetime_index(cls, values):
-        if values.data is not None:
-            # Compute the index type (Dask dd.DataFrames are lazy, so we need to check the meta)
-            if not isinstance(values.data.index._meta, pd.DatetimeIndex):
-                raise ValueError("The Dask dd.DataFrame index must be a DatetimeIndex.")
-        return values
