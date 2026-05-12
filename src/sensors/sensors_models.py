@@ -145,6 +145,7 @@ class Sensor(BaseModel, ABC):
     def update_data(self, new_data: pd.DataFrame) -> None:
         """
         Updates the sensor's data with new observations, writing each month's data to a separate Parquet file.
+        Timezone information is removed before monthly partitioning to avoid warnings.
 
         Args:
             new_data (pd.DataFrame): New data to add. Must have a datetime index or a 'timestamp' column.
@@ -158,6 +159,7 @@ class Sensor(BaseModel, ABC):
             - Data is partitioned by month (YYYY-MM) and stored as Parquet files.
             - Uses atomic writes (temp file + rename) to prevent corruption.
             - Duplicates are resolved by keeping the last observation for each timestamp.
+            - Timezone information is dropped before converting to PeriodIndex to avoid warnings.
         """
         if not isinstance(new_data.index, pd.DatetimeIndex):
             if "timestamp" in new_data.columns:
@@ -166,6 +168,10 @@ class Sensor(BaseModel, ABC):
                 raise ValueError(
                     "new_data must have a datetime index or 'timestamp' column."
                 )
+
+        # Remove timezone to avoid warnings when converting to PeriodIndex
+        if new_data.index.tz is not None:
+            new_data.index = new_data.index.tz_localize(None)
 
         # Extract unique months from the new data
         months = new_data.index.to_period("M").unique()
