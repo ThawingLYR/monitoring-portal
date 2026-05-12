@@ -7,7 +7,7 @@ It uses a registry pattern to map `DataProvider` values to concrete implementati
 
 from abc import ABC, abstractmethod
 from requests import Session
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Dict, Type, Optional
 from pandas import DataFrame
 from src.config.config_class import StationConfig, DataProvider, StationSensors
@@ -114,10 +114,10 @@ class DataSource(ABC):
     @abstractmethod
     def get_data(
         self,
-        start_time: Optional[datetime] = None,
-        end_time: Optional[datetime] = None,
-        sensors: Optional[StationSensors] = None,
-        variables: Optional[list[str]] = None,
+        start_time: datetime = None,
+        end_time: datetime = None,
+        sensors: list[StationSensors] = None,
+        variables: list[str] = None,
     ) -> DataFrame:
         """
         Abstract method to fetch data from the source.
@@ -134,3 +134,56 @@ class DataSource(ABC):
             DataFrame: A pandas DataFrame containing the fetched and formatted data.
         """
         pass
+
+    def _get_periods(
+        self, start_time: datetime, end_time: datetime, max_length: int = 180
+    ) -> list[tuple[datetime, datetime]]:
+        """
+        Splits a time range into a list of contiguous, non-overlapping periods, each with a maximum length of `max_length` days.
+        The next period starts **exactly at the end of the previous one** (exclusive), ensuring no gaps or overlaps.
+
+        Args:
+            start_time (datetime): Start of the overall time range (inclusive).
+            end_time (datetime): End of the overall time range (inclusive).
+            max_length (int): Maximum number of days for each period. Defaults to 180 (approximately 6 months).
+
+        Returns:
+            list[tuple[datetime, datetime]]: A list of tuples, where each tuple represents a period as (start, end).
+                                            The periods are contiguous and cover the entire range without gaps or overlaps.
+
+        Example:
+            >>> start = datetime(2023, 1, 1, 12, 0)  # Jan 1, 12:00
+            >>> end = datetime(2023, 1, 5, 6, 0)     # Jan 5, 06:00
+            >>> _get_periods(start, end, max_length=2)
+            [
+                (datetime(2023, 1, 1, 12, 0), datetime(2023, 1, 3, 12, 0)),  # Jan 1 12:00 to Jan 3 12:00
+                (datetime(2023, 1, 3, 12, 0), datetime(2023, 1, 5, 6, 0))    # Jan 3 12:00 to Jan 5 06:00
+            ]
+
+        Notes:
+            - The last period may be shorter than `max_length` if the remaining time is less than `max_length`.
+            - Each period starts **exactly where the previous one ended**, ensuring no gaps or overlaps.
+            - The `end_time` of the last period is **inclusive** (matches the input `end_time`).
+        """
+        if start_time > end_time:
+            raise ValueError("`start_time` must be before or equal to `end_time`.")
+        if max_length <= 0:
+            raise ValueError("`max_length` must be a positive integer.")
+
+        periods = []
+        current_start = start_time
+
+        while current_start < end_time:
+            # Calculate the end of the current period
+            current_end = current_start + timedelta(days=max_length)
+
+            # Ensure the end does not exceed the provided end_time
+            if current_end > end_time:
+                current_end = end_time
+
+            periods.append((current_start, current_end))
+
+            # Move to the start of the next period (exactly at the end of the current one)
+            current_start = current_end
+
+        return periods
