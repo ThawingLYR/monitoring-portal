@@ -7,7 +7,10 @@ Subclasses must implement the `create_figure` method to generate specific visual
 
 from pydantic import BaseModel
 from abc import abstractmethod, ABC
-from src.sensors.sensors_models import Sensor
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.sensors.sensors_models import Sensor
 from plotly.graph_objects import Figure as goFigure
 
 
@@ -25,7 +28,7 @@ class Figure(BaseModel, ABC):
     name: str | None = None
 
     @abstractmethod
-    def create_figure(self, sensor: Sensor) -> goFigure:
+    def create_figure(self, sensor: "Sensor") -> goFigure:
         """
         Abstract method to create a figure based on the provided station configuration and sensor data.
 

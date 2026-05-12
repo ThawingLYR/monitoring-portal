@@ -108,7 +108,7 @@ class Sensor(BaseModel, ABC):
                 f"Created folder for sensor data: {self.data_folder}. No data file exists yet."
             )
 
-        self.data_folder = os.path.join(
+        self.figure_folder = os.path.join(
             os.getenv("FIG_DIR", "figure/"),
             self.config.sourceType,
             self.config.sourceID,
@@ -246,14 +246,15 @@ class Sensor(BaseModel, ABC):
             )
 
     def get_data(
-        self, start_time: datetime, end_time: datetime
+        self, start_time: datetime = None, end_time: datetime = None
     ) -> Optional[pd.DataFrame]:
         """
         Retrieves the sensor's data within the specified time range.
+        If start_time or end_time is not provided, the range is unbounded on that side.
 
         Args:
-            start_time (datetime): Start of the time range (inclusive).
-            end_time (datetime): End of the time range (inclusive).
+            start_time (datetime, optional): Start of the time range (inclusive). Defaults to None.
+            end_time (datetime, optional): End of the time range (inclusive). Defaults to None.
 
         Returns:
             pd.DataFrame | None: The filtered data as a pandas DataFrame, or None if no data is available.
@@ -264,7 +265,19 @@ class Sensor(BaseModel, ABC):
             )
             return None
 
-        # Filter data by time range and compute the result
+        # If no time range is provided, return all data
+        if start_time is None and end_time is None:
+            return self.data.data.compute()
+
+        # If only start_time is provided, filter from start_time to the end
+        if start_time is not None and end_time is None:
+            return self.data.data.loc[start_time:].compute()
+
+        # If only end_time is provided, filter from the beginning to end_time
+        if start_time is None and end_time is not None:
+            return self.data.data.loc[:end_time].compute()
+
+        # If both are provided, filter between start_time and end_time
         return self.data.data.loc[start_time:end_time].compute()
 
     def update_latest_data(self) -> None:
