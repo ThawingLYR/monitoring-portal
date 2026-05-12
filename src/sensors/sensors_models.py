@@ -14,6 +14,7 @@ Dependencies:
     - abc: For abstract base class definitions.
 """
 
+import numpy as np
 from pydantic import BaseModel, ConfigDict, model_validator
 import dask.dataframe as dd
 import pandas as pd
@@ -161,6 +162,10 @@ class Sensor(BaseModel, ABC):
             - Duplicates are resolved by keeping the last observation for each timestamp.
             - Timezone information is dropped before converting to PeriodIndex to avoid warnings.
         """
+        if len(new_data.columns) != len(np.unique(new_data.columns)):
+            logger.error("There is duplicated columns in the new data, aborting...")
+            return
+
         if not isinstance(new_data.index, pd.DatetimeIndex):
             if "timestamp" in new_data.columns:
                 new_data = new_data.set_index("timestamp")
@@ -195,11 +200,20 @@ class Sensor(BaseModel, ABC):
                         missing_in_new = set(existing_data.columns) - set(
                             new_data.columns
                         )
-                        raise ValueError(
-                            f"Header mismatch for {month_str}. "
-                            f"Missing in existing: {missing_in_existing}. "
-                            f"Missing in new: {missing_in_new}."
-                        )
+
+                        # Add missing columns to new_data with NaN
+                        for col in missing_in_new:
+                            new_data[col] = np.nan
+                            logger.warning(
+                                f"Missing column {col} in the new data - filling with NaN"
+                            )
+
+                        # Only raise error if there are columns in new_data not in existing_data
+                        if missing_in_existing:
+                            raise ValueError(
+                                f"Header mismatch for {month_str}. "
+                                f"Columns in new data not present in existing: {missing_in_existing}."
+                            )
                 else:
                     existing_data = pd.DataFrame(columns=new_data.columns)
 
