@@ -61,13 +61,15 @@ class TilsigDataSource(DataSource):
                     logger.warning(
                         f"Request for Tilsig sensor {sensor.sensorID} between {start} and {end} failled with code {r.status_code}"
                     )
-        return pd.concat(
+        df = pd.concat(
             dfs,
             axis=0,
             join="outer",  # Keeps all columns, fills missing with NaN
             ignore_index=False,  # Preserves the datetime index
             sort=True,  # Avoids sorting the index
         ).sort_index(axis=1)
+
+        return df
 
     def _get_session(self) -> Session:
 
@@ -122,7 +124,9 @@ class TilsigDataSource(DataSource):
                 df[df["sequence"] == seq][["value", "timestamp"]]
                 .set_index("timestamp")
                 .rename(
-                    columns={"value": f"{variable_name}_{sensor.depth[seq]:05.0f}cm"}
+                    columns={
+                        "value": f"{variable_name}-depth_below_surface_{sensor.depth[seq]:05.0f}cm"
+                    }
                 )
                 for seq in sequences
             ],
