@@ -1,5 +1,6 @@
 from src.datasource.datasource_model import DataSource
 from src.config.config_class import StationSensors
+from src.utils.utc_managment import make_utc
 
 from requests import Session, post
 from datetime import datetime, timezone
@@ -159,10 +160,8 @@ class TilsigDataSource(DataSource):
         new_sensors = []
 
         # Ensure start_time and end_time are timezone-aware (default to UTC if naive)
-        if start_time.tzinfo is None:
-            start_time = start_time.replace(tzinfo=timezone.utc)
-        if end_time.tzinfo is None:
-            end_time = end_time.replace(tzinfo=timezone.utc)
+        start_time = make_utc(start_time)
+        end_time = make_utc(end_time)
 
         for sensor in sensors:
             new_sensor = sensor.model_copy()
@@ -173,11 +172,8 @@ class TilsigDataSource(DataSource):
             else:
                 sensor_start = sensor.startDate
 
-            # Ensure sensor.endDate is timezone-aware (default to UTC if naive)
-            if sensor.endDate is not None and sensor.endDate.tzinfo is None:
-                sensor_end = sensor.endDate.replace(tzinfo=timezone.utc)
-            else:
-                sensor_end = sensor.endDate
+            sensor_start = make_utc(sensor.startDate)
+            sensor_end = make_utc(sensor.endDate)
 
             # Clip startDate
             if sensor_start < start_time:
