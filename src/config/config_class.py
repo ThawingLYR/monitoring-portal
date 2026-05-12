@@ -13,10 +13,12 @@ Dependencies:
     - datetime: For handling dates.
 """
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import Dict, Literal
 from folium import Icon, Marker, Popup, Html
 from datetime import datetime
+
+from src.utils.utc_managment import make_utc
 
 # Define all possible types of stations.
 StationType = Literal["boreholes", "aws"]
@@ -66,6 +68,13 @@ class StationSensors(BaseModel):
     startDate: datetime
     endDate: datetime | None = None
     depth: Dict[int, float] | None = None
+
+    @field_validator("startDate", "endDate", mode="after")
+    def ensure_utc(cls, v):
+        if v is None:
+            return None
+        else:
+            return make_utc(v)
 
 
 class StationConfig(BaseModel):
