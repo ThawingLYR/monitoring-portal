@@ -2,7 +2,7 @@ from src.datasource.datasource_model import DataSource
 from src.config.config_class import StationSensors
 
 from requests import Session, post
-from datetime import datetime
+from datetime import datetime, timezone
 
 from typing import Any, Dict
 from pandas import DataFrame
@@ -42,6 +42,9 @@ class TilsigDataSource(DataSource):
             periods = self._get_periods(sensor.startDate, sensor.endDate)
 
             for start, end in periods:
+                logger.info(
+                    f"Requesting data for Tilsig sensor {sensor.sensorID} between {start} and {end}"
+                )
                 parameters = {
                     "stationId": "",
                     "deviceId": "",
@@ -142,6 +145,7 @@ class TilsigDataSource(DataSource):
         """
         Filters and adjusts a list of sensors to only include those relevant to the specified time range.
         For each sensor, the `startDate` and `endDate` are clipped to the provided `start_time` and `end_time`.
+        If a datetime is not timezone-aware, it is assumed to be UTC.
 
         Args:
             start_time (datetime): Start of the time range (inclusive).
@@ -153,19 +157,40 @@ class TilsigDataSource(DataSource):
                                 Sensors with no overlap with the time range are excluded.
         """
         new_sensors = []
+
+        # Ensure start_time and end_time are timezone-aware (default to UTC if naive)
+        if start_time.tzinfo is None:
+            start_time = start_time.replace(tzinfo=timezone.utc)
+        if end_time.tzinfo is None:
+            end_time = end_time.replace(tzinfo=timezone.utc)
+
         for sensor in sensors:
             new_sensor = sensor.model_copy()
 
-            if sensor.startDate < start_time:
+            # Ensure sensor.startDate is timezone-aware (default to UTC if naive)
+            if sensor.startDate.tzinfo is None:
+                sensor_start = sensor.startDate.replace(tzinfo=timezone.utc)
+            else:
+                sensor_start = sensor.startDate
+
+            # Ensure sensor.endDate is timezone-aware (default to UTC if naive)
+            if sensor.endDate is not None and sensor.endDate.tzinfo is None:
+                sensor_end = sensor.endDate.replace(tzinfo=timezone.utc)
+            else:
+                sensor_end = sensor.endDate
+
+            # Clip startDate
+            if sensor_start < start_time:
                 new_sensor.startDate = start_time
-            elif sensor.startDate > end_time:
+            elif sensor_start > end_time:
                 continue
 
-            if sensor.endDate is None:
+            # Clip endDate
+            if sensor_end is None:
                 new_sensor.endDate = end_time
-            elif sensor.endDate > end_time:
+            elif sensor_end > end_time:
                 new_sensor.endDate = end_time
-            elif sensor.endDate < start_time:
+            elif sensor_end < start_time:
                 continue
 
             new_sensors.append(new_sensor)
