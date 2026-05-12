@@ -144,18 +144,18 @@ class Sensor(BaseModel, ABC):
 
     def update_data(self, new_data: pd.DataFrame) -> None:
         """
-        Updates the sensor's data with new observations, writing each date's data to a separate Parquet file.
+        Updates the sensor's data with new observations, writing each month's data to a separate Parquet file.
 
         Args:
             new_data (pd.DataFrame): New data to add. Must have a datetime index or a 'timestamp' column.
 
         Raises:
             ValueError: If `new_data` lacks a datetime index or 'timestamp' column.
-            ValueError: If there is a header mismatch between existing and new data for any date.
+            ValueError: If there is a header mismatch between existing and new data for any month.
             Exception: If an error occurs during file operations (temp files are cleaned up).
 
         Notes:
-            - Data is partitioned by date (YYYY-MM-DD) and stored as Parquet files.
+            - Data is partitioned by month (YYYY-MM) and stored as Parquet files.
             - Uses atomic writes (temp file + rename) to prevent corruption.
             - Duplicates are resolved by keeping the last observation for each timestamp.
         """
@@ -167,16 +167,16 @@ class Sensor(BaseModel, ABC):
                     "new_data must have a datetime index or 'timestamp' column."
                 )
 
-        # Extract unique dates from the new data
-        dates = new_data.index.normalize().unique()
+        # Extract unique months from the new data
+        months = new_data.index.to_period("M").unique()
 
-        for date in dates:
-            date_str = date.strftime("%Y-%m-%d")
-            file_path = os.path.join(self.data_folder, f"{date_str}.parquet")
+        for month in months:
+            month_str = month.strftime("%Y-%m")
+            file_path = os.path.join(self.data_folder, f"{month_str}.parquet")
             temp_file_path = None
 
             try:
-                # Load existing data for this date (if any)
+                # Load existing data for this month (if any)
                 if os.path.exists(file_path):
                     existing_data = dd.read_parquet(
                         file_path, engine="pyarrow"
@@ -190,18 +190,18 @@ class Sensor(BaseModel, ABC):
                             new_data.columns
                         )
                         raise ValueError(
-                            f"Header mismatch for {date_str}. "
+                            f"Header mismatch for {month_str}. "
                             f"Missing in existing: {missing_in_existing}. "
                             f"Missing in new: {missing_in_new}."
                         )
                 else:
                     existing_data = pd.DataFrame(columns=new_data.columns)
 
-                # Filter new_data for this date
-                new_data_for_date = new_data[new_data.index.normalize() == date]
+                # Filter new_data for this month
+                new_data_for_month = new_data[new_data.index.to_period("M") == month]
 
                 # Combine existing and new data, keeping the last observation for duplicates
-                updated_data = pd.concat([existing_data, new_data_for_date])
+                updated_data = pd.concat([existing_data, new_data_for_month])
                 updated_data = updated_data[~updated_data.index.duplicated(keep="last")]
 
                 # Atomic write: write to temp file first
