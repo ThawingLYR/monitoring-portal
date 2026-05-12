@@ -1,12 +1,10 @@
-from src.config.config_class import StationConfig, StationType
-from src.sensors.sensors_models import SensorData, Sensor
+from src.sensors.sensors_models import Sensor
 from src.datasource import DataSource
 from datetime import datetime, timedelta, timezone
 import pandas as pd
 import re
 import numpy as np
 from loguru import logger
-from typing import Optional
 
 
 class SensorBorehole(Sensor):
@@ -22,33 +20,6 @@ class SensorBorehole(Sensor):
     """
 
     def fetch_data(self) -> pd.DataFrame:
-        """
-        Fetches borehole sensor data from the configured data source.
-
-        The method:
-        1. Creates a data source instance based on the sensor's `dataProvider`.
-        2. Determines the start time for the data fetch:
-           - If no data exists yet, fetches the last 10 years of data.
-           - Otherwise, fetches data from the last recorded timestamp.
-        3. Retrieves data for the specified time range and sensors.
-        4. Processes the column names to extract depth information.
-        5. Validates that all columns represent the same physical dimension (e.g., depth).
-        6. Restructures the DataFrame with a MultiIndex containing variable names and depths.
-
-        Returns:
-            pd.DataFrame: A DataFrame with soil temperature data, where columns are a MultiIndex
-                         of (variable_name, depth). The index is a DatetimeIndex.
-
-        Raises:
-            ValueError: If the data contains multiple extra dimensions (e.g., mixed depth/height columns).
-            Exception: If there is an error fetching or processing the data.
-
-        Notes:
-            - Assumes the data source returns a DataFrame with columns in the format:
-              "{variable}-{dimension}{value}" (e.g., "soil_temperature-depth10").
-            - Only fetches the "soil_temperature" variable by default.
-            - The end time is set to tomorrow to ensure we capture the latest data.
-        """
         try:
             # Initialize the data source based on the provider
             datasource = DataSource.create(self.config.dataProvider)
