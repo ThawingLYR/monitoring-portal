@@ -41,6 +41,7 @@ class PlotTimeseriesBoreholes(Figure):
             title="Borehole time series",
             xaxis_title="Time [UTC]",
             yaxis_title="Temperature [°C]",
+            xaxis_range=[data.index.min(), data.index.max()],
         )
 
         return fig
