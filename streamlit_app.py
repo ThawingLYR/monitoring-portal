@@ -29,6 +29,11 @@ ground_temperature = st.Page(
     default=True,
     icon=":material/thermostat:",
 )
+ground_temperature_new = st.Page(
+    "src/app/pages/main_boreholes_temperature_new.py",
+    title="Ground temperature new",
+    icon=":material/thermostat:",
+)
 ground_water_content = st.Page(
     "src/app/pages/borehole_ground_water_content.py",
     title="Ground water content",
@@ -84,6 +89,7 @@ pg = st.navigation(
         "": [home_page],
         "Observations": [
             ground_temperature,
+            ground_temperature_new,
             ground_water_content,
             weather_stations,
             insar_deformation,

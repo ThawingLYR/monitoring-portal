@@ -1,0 +1,1185 @@
+[
+    {
+        "sourceID": "SN99843",
+        "name": "Plat\u00e5berget III",
+        "startDate": "2018-02-03",
+        "coordinates": {
+            "latitude": 78.2278,
+            "longitude": 15.378
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "?",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "frost",
+        "sensors": []
+    },
+    {
+        "sourceID": "SN99855",
+        "name": "Longyeardalen - Valley Bottom",
+        "startDate": "2018-09-16",
+        "coordinates": {
+            "latitude": 78.2097,
+            "longitude": 15.609
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "SIOS InfraNOR project",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "frost",
+        "sensors": []
+    },
+    {
+        "sourceID": "SN99857",
+        "name": "Longyeardalen - Central",
+        "startDate": "2023-09-16",
+        "coordinates": {
+            "latitude": 78.2127,
+            "longitude": 15.6107
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PMC project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "frost",
+        "sensors": []
+    },
+    {
+        "sourceID": "SN99862",
+        "name": "Breinosa - Blockfield Plateau",
+        "startDate": "2022-03-25",
+        "coordinates": {
+            "latitude": 78.143,
+            "longitude": 16.0665
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "SIOS InfraNOR project",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "frost",
+        "sensors": []
+    },
+    {
+        "sourceID": "SN99867",
+        "name": "Gruvefjellet - Blockfield Plateau",
+        "startDate": "2022-03-26",
+        "coordinates": {
+            "latitude": 78.1965,
+            "longitude": 15.6317
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "SIOS InfraNOR project",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "frost",
+        "sensors": []
+    },
+    {
+        "sourceID": "SN99868",
+        "name": "Endalen",
+        "startDate": "2021-11-14",
+        "coordinates": {
+            "latitude": 78.1905,
+            "longitude": 15.7815
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "SIOS InfraNOR project",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "frost",
+        "sensors": []
+    },
+    {
+        "sourceID": "SN99869",
+        "name": "Adventdalen - Loess terrrace",
+        "startDate": "2019-08-24",
+        "coordinates": {
+            "latitude": 78.2017,
+            "longitude": 15.8293
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "SIOS InfraNOR project",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "frost",
+        "sensors": []
+    },
+    {
+        "sourceID": "SN99872",
+        "name": "Adventdalen - Upper Snowdrift",
+        "startDate": "2019-09-03",
+        "coordinates": {
+            "latitude": 78.1823,
+            "longitude": 15.9453
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "SIOS InfraNOR project",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "frost",
+        "sensors": []
+    },
+    {
+        "sourceID": "SN99874",
+        "name": "Janssonhaugen - Vest",
+        "startDate": "2019-09-28",
+        "coordinates": {
+            "latitude": 78.18,
+            "longitude": 16.41
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "?",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "frost",
+        "sensors": []
+    },
+    {
+        "sourceID": "SN99875",
+        "name": "Janssonhaugen",
+        "startDate": "1998-05-09",
+        "coordinates": {
+            "latitude": 78.1793,
+            "longitude": 16.467
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PACE project",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "frost",
+        "sensors": []
+    },
+    {
+        "sourceID": "SN99877",
+        "name": "Adventdalen - Ice-Wedge",
+        "startDate": "2019-08-26",
+        "coordinates": {
+            "latitude": 78.1862,
+            "longitude": 15.9238
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "?",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "frost",
+        "sensors": []
+    },
+    {
+        "sourceID": "SN99879",
+        "name": "Adventdalen - Innerhytta Pingo",
+        "startDate": "2020-08-24",
+        "coordinates": {
+            "latitude": 78.1888,
+            "longitude": 16.3442
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "SIOS InfraNOR project",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "frost",
+        "sensors": []
+    },
+    {
+        "sourceID": "6629",
+        "name": "Vannledningsdalen",
+        "startDate": "2023-06-06",
+        "coordinates": {
+            "latitude": 78.2129,
+            "longitude": 15.6328
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PMC project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "6629",
+                "startDate": "2023-06-06T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 0.0,
+                    "2": 10.0,
+                    "3": 20.0,
+                    "4": 40.0,
+                    "5": 60.0,
+                    "6": 80.0,
+                    "7": 100.0,
+                    "8": 120.0,
+                    "9": 140.0,
+                    "10": 160.0,
+                    "11": 180.0,
+                    "12": 200.0,
+                    "13": 250.0,
+                    "14": 300.0,
+                    "15": 350.0,
+                    "16": 400.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "6596",
+        "name": "Gruvedalen - Ski slope",
+        "startDate": "2023-02-02",
+        "coordinates": {
+            "latitude": 78.2164,
+            "longitude": 15.6599
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PMC project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "6596",
+                "startDate": "2023-02-02T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 0.0,
+                    "2": 10.0,
+                    "3": 20.0,
+                    "4": 40.0,
+                    "5": 60.0,
+                    "6": 80.0,
+                    "7": 100.0,
+                    "8": 120.0,
+                    "9": 140.0,
+                    "10": 160.0,
+                    "11": 180.0,
+                    "12": 200.0,
+                    "13": 250.0,
+                    "14": 300.0,
+                    "15": 350.0,
+                    "16": 400.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "6603",
+        "name": "Nybyen",
+        "startDate": "2023-02-02",
+        "coordinates": {
+            "latitude": 78.2019,
+            "longitude": 15.5931
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PMC project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "6603",
+                "startDate": "2023-02-02T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 0.0,
+                    "2": 10.0,
+                    "3": 20.0,
+                    "4": 40.0,
+                    "5": 60.0,
+                    "6": 80.0,
+                    "7": 100.0,
+                    "8": 120.0,
+                    "9": 140.0,
+                    "10": 160.0,
+                    "11": 180.0,
+                    "12": 200.0,
+                    "13": 250.0,
+                    "14": 300.0,
+                    "15": 350.0,
+                    "16": 400.0,
+                    "17": 450.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "6607",
+        "name": "Cemetery",
+        "startDate": "2023-02-02",
+        "coordinates": {
+            "latitude": 78.2148,
+            "longitude": 15.6063
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PMC project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "6607",
+                "startDate": "2023-02-02T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 0.0,
+                    "2": 10.0,
+                    "3": 20.0,
+                    "4": 40.0,
+                    "5": 60.0,
+                    "6": 80.0,
+                    "7": 100.0,
+                    "8": 120.0,
+                    "9": 140.0,
+                    "10": 160.0,
+                    "11": 180.0,
+                    "12": 200.0,
+                    "13": 250.0,
+                    "14": 300.0,
+                    "15": 350.0,
+                    "16": 400.0,
+                    "17": 450.0,
+                    "18": 500.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "6235",
+        "name": "Haugen",
+        "startDate": "2024-03-08",
+        "coordinates": {
+            "latitude": 78.21,
+            "longitude": 15.6213
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PMC project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "6235",
+                "startDate": "2024-03-08T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 0.0,
+                    "2": 10.0,
+                    "3": 20.0,
+                    "4": 40.0,
+                    "5": 60.0,
+                    "6": 80.0,
+                    "7": 100.0,
+                    "8": 120.0,
+                    "9": 140.0,
+                    "10": 160.0,
+                    "11": 180.0,
+                    "12": 200.0,
+                    "13": 250.0,
+                    "14": 300.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "6234",
+        "name": "Longyeardalen Vest",
+        "startDate": "2024-03-11",
+        "coordinates": {
+            "latitude": 78.2108,
+            "longitude": 15.597
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PMC project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "6234",
+                "startDate": "2024-03-11T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 0.0,
+                    "2": 10.0,
+                    "3": 20.0,
+                    "4": 40.0,
+                    "5": 60.0,
+                    "6": 80.0,
+                    "7": 100.0,
+                    "8": 120.0,
+                    "9": 140.0,
+                    "10": 160.0,
+                    "11": 180.0,
+                    "12": 200.0,
+                    "13": 250.0,
+                    "14": 300.0,
+                    "15": 350.0,
+                    "16": 400.0,
+                    "17": 450.0,
+                    "18": 500.0,
+                    "19": 550.0,
+                    "20": 600.0,
+                    "21": 650.0,
+                    "22": 700.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "8279",
+        "name": "Gruvedalen",
+        "startDate": "2024-12-16",
+        "coordinates": {
+            "latitude": 78.2172,
+            "longitude": 15.6634
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PMC project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "8279",
+                "startDate": "2024-12-16T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 40.0,
+                    "2": 50.0,
+                    "3": 60.0,
+                    "4": 80.0,
+                    "5": 100.0,
+                    "6": 120.0,
+                    "7": 140.0,
+                    "8": 160.0,
+                    "9": 180.0,
+                    "10": 200.0,
+                    "11": 220.0,
+                    "12": 240.0,
+                    "13": 290.0,
+                    "14": 340.0,
+                    "15": 390.0,
+                    "16": 440.0,
+                    "17": 490.0,
+                    "18": 540.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "6233",
+        "name": "Taubanesentralen LYR",
+        "startDate": "2024-04-04",
+        "coordinates": {
+            "latitude": 78.2234,
+            "longitude": 15.6166
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PermaRICH project (NORCE)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "6233",
+                "startDate": "2024-04-04T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 0.0,
+                    "2": 10.0,
+                    "3": 20.0,
+                    "4": 40.0,
+                    "5": 60.0,
+                    "6": 80.0,
+                    "7": 100.0,
+                    "8": 120.0,
+                    "9": 140.0,
+                    "10": 160.0,
+                    "11": 180.0,
+                    "12": 200.0,
+                    "13": 250.0,
+                    "14": 300.0,
+                    "15": 350.0,
+                    "16": 400.0,
+                    "17": 450.0,
+                    "18": 500.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "6238",
+        "name": "Taubanebukk Spisshusene",
+        "startDate": "2024-03-11",
+        "coordinates": {
+            "latitude": 78.2189,
+            "longitude": 15.6488
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PermaRICH project (NORCE)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "6238",
+                "startDate": "2024-03-11T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 0.0,
+                    "2": 10.0,
+                    "3": 20.0,
+                    "4": 40.0,
+                    "5": 60.0,
+                    "6": 80.0,
+                    "7": 100.0,
+                    "8": 120.0,
+                    "9": 140.0,
+                    "10": 160.0,
+                    "11": 180.0,
+                    "12": 200.0,
+                    "13": 250.0,
+                    "14": 300.0,
+                    "15": 350.0,
+                    "16": 400.0,
+                    "17": 450.0,
+                    "18": 500.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "6236",
+        "name": "Hotelneset Titankrana",
+        "startDate": "2024-03-11",
+        "coordinates": {
+            "latitude": 78.2469,
+            "longitude": 15.5419
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PCCH-Arctic project (SINTEF)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "6236",
+                "startDate": "2024-03-11T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 0.0,
+                    "2": 10.0,
+                    "3": 20.0,
+                    "4": 40.0,
+                    "5": 60.0,
+                    "6": 80.0,
+                    "7": 100.0,
+                    "8": 120.0,
+                    "9": 140.0,
+                    "10": 160.0,
+                    "11": 180.0,
+                    "12": 200.0,
+                    "13": 250.0,
+                    "14": 300.0,
+                    "15": 350.0,
+                    "16": 400.0,
+                    "17": 450.0,
+                    "18": 500.0,
+                    "19": 550.0,
+                    "20": 600.0,
+                    "21": 650.0,
+                    "22": 700.0,
+                    "23": 800.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "6237",
+        "name": "Taubanebukk Isdammen",
+        "startDate": "2024-03-11",
+        "coordinates": {
+            "latitude": 78.2039,
+            "longitude": 15.7473
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PCCH-Arctic project (SINTEF)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "6237",
+                "startDate": "2024-03-11T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 0.0,
+                    "2": 10.0,
+                    "3": 20.0,
+                    "4": 40.0,
+                    "5": 60.0,
+                    "6": 80.0,
+                    "7": 100.0,
+                    "8": 120.0,
+                    "9": 140.0,
+                    "10": 160.0,
+                    "11": 180.0,
+                    "12": 200.0,
+                    "13": 250.0,
+                    "14": 300.0,
+                    "15": 350.0,
+                    "16": 400.0,
+                    "17": 450.0,
+                    "18": 500.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "6927",
+        "name": "Kulturhuset: center angled",
+        "startDate": "2024-01-08",
+        "coordinates": {
+            "latitude": 78.2196,
+            "longitude": 15.6427
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PMC project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "6927",
+                "startDate": "2024-01-08T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 40.0,
+                    "2": 50.0,
+                    "3": 100.0,
+                    "4": 150.0,
+                    "5": 200.0,
+                    "6": 250.0,
+                    "7": 300.0,
+                    "8": 350.0,
+                    "9": 400.0,
+                    "10": 450.0,
+                    "11": 500.0,
+                    "12": 550.0,
+                    "13": 600.0,
+                    "14": 650.0,
+                    "15": 700.0,
+                    "16": 750.0,
+                    "17": 800.0,
+                    "18": 850.0,
+                    "19": 900.0,
+                    "20": 950.0,
+                    "21": 1000.0,
+                    "22": 1050.0,
+                    "23": 1100.0,
+                    "24": 1150.0,
+                    "25": 1200.0,
+                    "26": 1250.0,
+                    "27": 1300.0,
+                    "28": 1350.0,
+                    "29": 1400.0,
+                    "30": 1450.0,
+                    "31": 1500.0,
+                    "32": 1550.0,
+                    "33": 1600.0,
+                    "34": 1650.0,
+                    "35": 1700.0,
+                    "36": 1750.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "6926",
+        "name": "Kulturhuset: rim angled",
+        "startDate": "2024-01-08",
+        "coordinates": {
+            "latitude": 78.2197,
+            "longitude": 15.6422
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PMC project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "6926",
+                "startDate": "2024-01-08T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 40.0,
+                    "2": 50.0,
+                    "3": 100.0,
+                    "4": 150.0,
+                    "5": 200.0,
+                    "6": 250.0,
+                    "7": 300.0,
+                    "8": 350.0,
+                    "9": 400.0,
+                    "10": 450.0,
+                    "11": 500.0,
+                    "12": 550.0,
+                    "13": 600.0,
+                    "14": 650.0,
+                    "15": 700.0,
+                    "16": 750.0,
+                    "17": 800.0,
+                    "18": 850.0,
+                    "19": 900.0,
+                    "20": 950.0,
+                    "21": 1000.0,
+                    "22": 1050.0,
+                    "23": 1100.0,
+                    "24": 1150.0,
+                    "25": 1200.0,
+                    "26": 1250.0,
+                    "27": 1300.0,
+                    "28": 1350.0,
+                    "29": 1400.0,
+                    "30": 1450.0,
+                    "31": 1500.0,
+                    "32": 1550.0,
+                    "33": 1600.0,
+                    "34": 1650.0,
+                    "35": 1700.0,
+                    "36": 1750.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "6606",
+        "name": "Kulturhuset: vertical",
+        "startDate": "2024-01-08",
+        "coordinates": {
+            "latitude": 78.2196,
+            "longitude": 15.6413
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "PMC project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "6606",
+                "startDate": "2024-01-08T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 40.0,
+                    "2": 50.0,
+                    "3": 100.0,
+                    "4": 150.0,
+                    "5": 200.0,
+                    "6": 250.0,
+                    "7": 300.0,
+                    "8": 350.0,
+                    "9": 400.0,
+                    "10": 450.0,
+                    "11": 500.0,
+                    "12": 550.0,
+                    "13": 600.0,
+                    "14": 650.0,
+                    "15": 700.0,
+                    "16": 750.0,
+                    "17": 800.0,
+                    "18": 850.0,
+                    "19": 900.0,
+                    "20": 950.0,
+                    "21": 1000.0,
+                    "22": 1050.0,
+                    "23": 1100.0,
+                    "24": 1150.0,
+                    "25": 1200.0,
+                    "26": 1250.0,
+                    "27": 1300.0,
+                    "28": 1350.0,
+                    "29": 1400.0,
+                    "30": 1450.0,
+                    "31": 1500.0,
+                    "32": 1550.0,
+                    "33": 1600.0,
+                    "34": 1650.0,
+                    "35": 1700.0,
+                    "36": 1750.0,
+                    "37": 1800.0,
+                    "38": 1850.0,
+                    "39": 1900.0,
+                    "40": 1950.0,
+                    "41": 2000.0,
+                    "42": 2050.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "10919",
+        "name": "Elvesletta NE",
+        "startDate": "2025-12-07",
+        "coordinates": {
+            "latitude": 78.2221,
+            "longitude": 15.6432
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "ThawingLYR project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "10919",
+                "startDate": "2025-12-07T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 20.0,
+                    "2": 50.0,
+                    "3": 100.0,
+                    "4": 200.0,
+                    "5": 300.0,
+                    "6": 400.0,
+                    "7": 500.0,
+                    "8": 600.0,
+                    "9": 700.0,
+                    "10": 800.0,
+                    "11": 900.0,
+                    "12": 1000.0,
+                    "13": 1200.0,
+                    "14": 1400.0,
+                    "15": 1600.0,
+                    "16": 1800.0,
+                    "17": 2000.0,
+                    "18": 2200.0,
+                    "19": 2400.0,
+                    "20": 2300.0,
+                    "21": 2100.0,
+                    "22": 1900.0,
+                    "23": 1700.0,
+                    "24": 1500.0,
+                    "25": 1300.0,
+                    "26": 1100.0,
+                    "27": 900.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "10952",
+        "name": "Elvesletta NW",
+        "startDate": "2025-12-07",
+        "coordinates": {
+            "latitude": 78.2219,
+            "longitude": 15.6401
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "ThawingLYR project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "10952",
+                "startDate": "2025-12-07T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 20.0,
+                    "2": 50.0,
+                    "3": 100.0,
+                    "4": 200.0,
+                    "5": 300.0,
+                    "6": 400.0,
+                    "7": 500.0,
+                    "8": 600.0,
+                    "9": 700.0,
+                    "10": 800.0,
+                    "11": 900.0,
+                    "12": 1000.0,
+                    "13": 1200.0,
+                    "14": 1400.0,
+                    "15": 1600.0,
+                    "16": 1800.0,
+                    "17": 2000.0,
+                    "18": 2200.0,
+                    "19": 2400.0,
+                    "20": 2300.0,
+                    "21": 2100.0,
+                    "22": 1900.0,
+                    "23": 1700.0,
+                    "24": 1500.0,
+                    "25": 1300.0,
+                    "26": 1100.0,
+                    "27": 900.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "10886",
+        "name": "Elvesletta Mary-Ann's",
+        "startDate": "2025-12-07",
+        "coordinates": {
+            "latitude": 78.222,
+            "longitude": 15.6364
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "ThawingLYR project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "10886",
+                "startDate": "2025-12-07T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 20.0,
+                    "2": 50.0,
+                    "3": 100.0,
+                    "4": 200.0,
+                    "5": 300.0,
+                    "6": 400.0,
+                    "7": 500.0,
+                    "8": 600.0,
+                    "9": 700.0,
+                    "10": 800.0,
+                    "11": 900.0,
+                    "12": 1000.0,
+                    "13": 1200.0,
+                    "14": 1400.0,
+                    "15": 1600.0,
+                    "16": 1800.0,
+                    "17": 2000.0,
+                    "18": 2200.0,
+                    "19": 2400.0,
+                    "20": 2600.0,
+                    "21": 2800.0,
+                    "22": 3000.0,
+                    "23": 3200.0,
+                    "24": 3400.0,
+                    "25": 3600.0,
+                    "26": 3800.0,
+                    "27": 4000.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "13097",
+        "name": "Taubanebukk line 2b #6",
+        "startDate": "2026-04-09",
+        "coordinates": {
+            "latitude": 78.2097,
+            "longitude": 15.6161
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "ThawingLYR project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "13097",
+                "startDate": "2026-04-09T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 0.0,
+                    "2": 10.0,
+                    "3": 20.0,
+                    "4": 40.0,
+                    "5": 60.0,
+                    "6": 80.0,
+                    "7": 100.0,
+                    "8": 120.0,
+                    "9": 140.0,
+                    "10": 160.0,
+                    "11": 180.0,
+                    "12": 200.0,
+                    "13": 250.0,
+                    "14": 300.0,
+                    "15": 350.0,
+                    "16": 400.0,
+                    "17": 450.0,
+                    "18": 500.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "10165",
+        "name": "Taubanebukk line 2b #7",
+        "startDate": "2026-04-09",
+        "coordinates": {
+            "latitude": 78.2088,
+            "longitude": 15.6148
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "ThawingLYR project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "10165",
+                "startDate": "2026-04-09T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 0.0,
+                    "2": 10.0,
+                    "3": 20.0,
+                    "4": 40.0,
+                    "5": 60.0,
+                    "6": 80.0,
+                    "7": 100.0,
+                    "8": 120.0,
+                    "9": 140.0,
+                    "10": 160.0,
+                    "11": 180.0,
+                    "12": 200.0,
+                    "13": 250.0,
+                    "14": 300.0,
+                    "15": 350.0,
+                    "16": 400.0,
+                    "17": 450.0,
+                    "18": 500.0
+                }
+            }
+        ]
+    },
+    {
+        "sourceID": "10162",
+        "name": "Old museum",
+        "startDate": "2026-04-09",
+        "coordinates": {
+            "latitude": 78.2173,
+            "longitude": 15.6155
+        },
+        "sourceType": "boreholes",
+        "type": "Ground temperature",
+        "owner": "ThawingLYR project (UNIS)",
+        "marker": {
+            "color": "orange",
+            "icon": "cloud"
+        },
+        "dataProvider": "tilsig",
+        "sensors": [
+            {
+                "sensorID": "10162",
+                "startDate": "2026-04-09T00:00:00",
+                "endDate": null,
+                "depth": {
+                    "1": 0.0,
+                    "2": 10.0,
+                    "3": 20.0,
+                    "4": 40.0,
+                    "5": 60.0,
+                    "6": 80.0,
+                    "7": 100.0,
+                    "8": 120.0,
+                    "9": 140.0,
+                    "10": 160.0,
+                    "11": 180.0,
+                    "12": 200.0,
+                    "13": 250.0,
+                    "14": 300.0,
+                    "15": 350.0,
+                    "16": 400.0,
+                    "17": 450.0,
+                    "18": 500.0
+                }
+            }
+        ]
+    }
+]
