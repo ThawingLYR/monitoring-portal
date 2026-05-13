@@ -1,0 +1,4 @@
+from .plot_timeseries_boreholes import PlotTimeseriesBoreholes
+from .plot_timeseries_months_boreholes import PlotTimeseriesMonthsBoreholes
+
+all_boreholes_figures = [PlotTimeseriesBoreholes, PlotTimeseriesMonthsBoreholes]
