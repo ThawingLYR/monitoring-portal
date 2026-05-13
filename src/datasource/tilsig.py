@@ -1,5 +1,5 @@
 from src.datasource.datasource_model import DataSource
-from src.config.config_class import StationSensors
+from src.config.config_class import StationSensors, StationConfig
 from src.utils.utc_managment import make_utc
 
 from requests import Session, post
@@ -17,9 +17,10 @@ from loguru import logger
 
 @DataSource.register("tilsig")
 class TilsigDataSource(DataSource):
-    def __init__(self):
+    def __init__(self, config=StationConfig):
         super().__init__()
         self.provider = "tilsig"
+        self.config = config
 
     def get_data(
         self,
@@ -70,7 +71,7 @@ class TilsigDataSource(DataSource):
             axis=0,
             join="outer",  # Keeps all columns, fills missing with NaN
             ignore_index=False,  # Preserves the datetime index
-            sort=True,  # Avoids sorting the index
+            sort=True,  # Sort the index
         ).sort_index(axis=1)
 
         return df
