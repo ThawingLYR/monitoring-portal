@@ -5,10 +5,6 @@ import folium
 
 from src.app.reusable.folium_basemap import get_folium_basemap
 
-from src.config.config_manager import ConfigManager
-from src.sensors.borehole import SensorBorehole
-from src.plots.boreholes import all_boreholes_figures
-
 from sources_boreholes_MET import sources_met_boreholes, lookup_by_station_name_met
 from sources_boreholes_Tilsig import (
     sources_tilsig_boreholes,
@@ -36,9 +32,6 @@ from src.app.plots.plot_boreholes_data import (
 def convert_df(df):
     return df.to_csv(index=False, na_rep="NaN").encode("utf-8-sig")
 
-
-config_manager = ConfigManager()
-config_manager.load_config("boreholes")
 
 # Set page configuration
 st.set_page_config(page_title="Ground temperature data visualization", layout="wide")
@@ -151,15 +144,6 @@ if st_data["last_object_clicked_tooltip"] is not None:
         station["name"] == st_data["last_object_clicked_tooltip"]
         for station in sources_met_boreholes
     ):
-        with st.spinner("Loading new plots"):
-            sensor = SensorBorehole(
-                config=config_manager.get_stations(
-                    "boreholes", query={"name": st_data["last_object_clicked_tooltip"]}
-                )[0]
-            )
-            for fig in all_boreholes_figures:
-                st.plotly_chart(sensor.load_figure(fig), theme="streamlit")
-
         with st.spinner("Generating plots..."):
             # Create plots in columns
             col1_1, col1_2 = st.columns(2)
