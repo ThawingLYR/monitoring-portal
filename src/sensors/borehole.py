@@ -43,6 +43,8 @@ class SensorBorehole(Sensor):
                 variables=["soil_temperature"],
             )
 
+            df = df.T.groupby(level=0).mean().T
+
             return df
 
         except Exception as e:
