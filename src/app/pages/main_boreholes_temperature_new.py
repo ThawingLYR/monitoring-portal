@@ -3,38 +3,43 @@ import streamlit as st
 from streamlit_folium import st_folium
 
 from src.app.reusable.folium_basemap import get_folium_basemap
-
 from src.config.config_manager import ConfigManager
 from src.sensors.borehole import SensorBorehole
 from src.plots.boreholes import all_boreholes_figures
 
+# --- Configuration ---
 config_manager = ConfigManager()
 config_manager.load_config("boreholes")
 
-# Set page configuration
+# --- Page Setup ---
 st.set_page_config(page_title="Ground temperature data visualization", layout="wide")
 st.title("Ground temperature data visualization")
 
-m = get_folium_basemap()
+# --- Session State ---
+if "last_button" not in st.session_state:
+    st.session_state.last_button = None
+if "last_tooltip" not in st.session_state:
+    st.session_state.last_tooltip = None
 
+# --- Map Visualization ---
+m = get_folium_basemap()
 for config in config_manager.get_stations("boreholes"):
     config.get_marker().add_to(m)
 
-
-# call to render Folium map in Streamlit
 st_data = st_folium(
     m,
     use_container_width=True,
     height=450,
     returned_objects=["last_object_clicked_tooltip"],
-)  # width=1100
+)
 
-# Visualize data?
-# if st_data['last_object_clicked_tooltip'] != None:
-
-st.markdown(f"You selected **{st_data['last_object_clicked_tooltip']}**")
+# --- User Interaction ---
 if st_data["last_object_clicked_tooltip"] is not None:
-    # if st.button(f"Visualizate data of **{st_data['last_object_clicked_tooltip']}**?",type='primary'):
+    st.markdown(f"You selected **{st_data['last_object_clicked_tooltip']}**")
+
+    # Update sensor if tooltip changes
+    if st_data["last_object_clicked_tooltip"] != st.session_state.last_tooltip:
+        st.session_state.last_tooltip = st_data["last_object_clicked_tooltip"]
 
     sensor = SensorBorehole(
         config=config_manager.get_stations(
@@ -42,6 +47,7 @@ if st_data["last_object_clicked_tooltip"] is not None:
         )[0]
     )
 
+    # --- Buttons ---
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         button_h = st.button("Show historic (long-term) data", use_container_width=True)
@@ -56,18 +62,24 @@ if st_data["last_object_clicked_tooltip"] is not None:
             key="download-csv",
         )
 
+    # --- Data Visualization ---
+    # If a button is pressed, update the session state
     if button_h:
-        with st.spinner("Loading new plots"):
-            for fig in all_boreholes_figures:
+        st.session_state.last_button = "historic"
+    elif button_r:
+        st.session_state.last_button = "recent"
+
+    # Render plots based on the last button pressed
+    if st.session_state.last_button == "historic":
+        col_plot1, col_plot2 = st.columns(2)
+        for i, fig in enumerate(all_boreholes_figures):
+            with col_plot1 if i % 2 == 0 else col_plot2:
                 st.plotly_chart(sensor.load_figure(fig), theme="streamlit")
 
-    elif button_r:
+    elif st.session_state.last_button == "recent":
         with st.spinner("Generating plots..."):
-            # Create plots in columns
             col2_1, col2_2 = st.columns(2)
-
             with col2_1:
-                "Plots"
-
+                st.write("Plots")
             with col2_2:
-                "More plots"
+                st.write("More plots")
