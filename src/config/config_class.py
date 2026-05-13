@@ -51,6 +51,7 @@ class StationMarkers(BaseModel):
 
     color: str = "white"
     icon: str = "cloud"
+    prefix: str = "fa"
 
 
 class StationSensors(BaseModel):
@@ -144,7 +145,7 @@ class StationConfig(BaseModel):
         """
         return Marker(
             location=(self.coordinates.latitude, self.coordinates.longitude),
-            popup=Popup(html=Html(self.get_popup_html()), max_width=500),
+            popup=Popup(html=Html(self.get_popup_html(), script=True), max_width=500),
             tooltip=self.name,
             icon=self.get_icon(),
         )
