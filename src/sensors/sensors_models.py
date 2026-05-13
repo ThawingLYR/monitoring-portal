@@ -413,6 +413,36 @@ class Sensor(BaseModel, ABC):
             )
             raise
 
+    def get_csv(self) -> str:
+        """
+        Serializes the internal data to a CSV-formatted string with ISO 8601 timestamps.
+
+        Steps:
+        1. Retrieves data via `self.get_data()` (assumed to return a pandas DataFrame).
+        2. Resets the DataFrame index and renames it to 'timestamp'.
+        3. Converts the 'timestamp' column to ISO 8601 format (e.g., '2026-05-13T14:30:00.123Z').
+        4. Returns the DataFrame as a CSV string without an index column.
+
+        Returns:
+            str: CSV string of the DataFrame with standardized timestamp formatting.
+
+        Example:
+            >>> csv_output = obj.get_csv()
+            >>> print(csv_output)
+            timestamp,value
+            2026-05-13T14:30:00.123Z,42
+        """
+        df = self.get_data()
+        df_reset = df.reset_index()
+        df_reset = df_reset.rename(columns={"index": "timestamp"})
+
+        # Convert the 'timestamp' column to ISO format
+        df_reset["timestamp"] = (
+            df_reset["timestamp"].dt.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+        )
+
+        return df_reset.to_csv(index=False)
+
     @abstractmethod
     def fetch_data(self) -> pd.DataFrame:
         """
