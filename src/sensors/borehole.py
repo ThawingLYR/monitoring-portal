@@ -22,7 +22,7 @@ class SensorBorehole(Sensor):
     def fetch_data(self) -> pd.DataFrame:
         try:
             # Initialize the data source based on the provider
-            datasource = DataSource.create(self.config.dataProvider)
+            datasource = DataSource.create(config=self.config)
 
             # Determine the start time for the fetch
             if self.data is None or self.data.data is None:
