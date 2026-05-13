@@ -66,7 +66,9 @@ class DataSource(ABC):
         return decorator
 
     @classmethod
-    def create(cls, provider: DataProvider) -> "DataSource":
+    def create(
+        cls, provider: DataProvider = None, config: StationConfig = None
+    ) -> "DataSource":
         """
         Creates an instance of the `DataSource` subclass registered for the given provider.
 
@@ -79,9 +81,16 @@ class DataSource(ABC):
         Raises:
             ValueError: If no `DataSource` subclass is registered for the given provider.
         """
+        if provider is None and config is None:
+            raise ValueError(
+                "Please specify a provider or a configuration to instanciate a datasource"
+            )
+        if provider is None:
+            provider = config.dataProvider
+
         if provider not in cls._registry:
             raise ValueError(f"No DataSource registered for provider: {provider}")
-        return cls._registry[provider]()
+        return cls._registry[provider](config=config)
 
     @abstractmethod
     def _get_session(self) -> Session:
