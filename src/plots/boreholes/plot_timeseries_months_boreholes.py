@@ -64,7 +64,7 @@ class PlotTimeseriesMonthsBoreholes(Figure):
 
         # Update layout for day of year (1-365/366)
         fig.update_layout(
-            title="Surface Temperature by Day of Year (Daily Resolution)",
+            title=f"{sensor.config.name} Surface Temperature by Day of Year (Daily Resolution)",
             xaxis_title="Day of Year",
             yaxis_title="Temperature [°C]",
             xaxis=dict(

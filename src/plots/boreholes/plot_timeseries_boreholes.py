@@ -38,7 +38,7 @@ class PlotTimeseriesBoreholes(Figure):
             )
         # Update layout
         fig.update_layout(
-            title="Borehole time series",
+            title=f"{sensor.config.name} borehole time series",
             xaxis_title="Time [UTC]",
             yaxis_title="Temperature [°C]",
             xaxis_range=[data.index.min(), data.index.max()],
