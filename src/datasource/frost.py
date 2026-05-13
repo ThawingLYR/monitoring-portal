@@ -60,9 +60,9 @@ class FrostDataSource(DataSource):
             DataFrame: A pandas DataFrame with timestamps as the index and observation
                 elements as columns. Columns are sorted alphabetically.
                 Example:
-                    | timestamp           | air_temperature-1_0m | precipitation-0_0m |
-                    |---------------------|-----------------------|--------------------|
-                    | 2023-01-01 00:00:00 | 5.2                   | 0.0                |
+                    | timestamp           | air_temperature-height_above_msl_00002m | precipitation-air_temperature-height_above_msl_00000m |
+                    |---------------------|-----------------------------------------|-------------------------------------------------------|
+                    | 2023-01-01 00:00:00 | 5.2                                     | 0.0                                                   |
         """
         records = []
         for observation in data.get("data", []):
