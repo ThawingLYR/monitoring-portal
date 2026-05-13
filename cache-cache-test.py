@@ -1,6 +1,7 @@
 from src.config.config_manager import ConfigManager
 from src.sensors.borehole import SensorBorehole
-from src.plots.test_fig import PlotTimeseriesBoreholes
+
+from src.plots.boreholes import all_boreholes_figures
 
 from dotenv import load_dotenv
 
@@ -13,4 +14,5 @@ configs = config_manager.get_stations("boreholes")
 for config in configs:
     sensor = SensorBorehole(config=config)
     sensor.update_latest_data()
-    sensor.prepare_figure(PlotTimeseriesBoreholes)
+    for plot in all_boreholes_figures:
+        sensor.prepare_figure(plot)
