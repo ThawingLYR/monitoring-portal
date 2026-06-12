@@ -5,7 +5,7 @@ description = "ThawingLYR monitoring portal"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "dask>=2026.3.0",
+    "dask>=2026.6.0",
     "datetime>=6.0",
     "folium>=0.20.0",
     "loguru>=0.7.3",
