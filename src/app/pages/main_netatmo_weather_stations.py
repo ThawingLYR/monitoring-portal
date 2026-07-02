@@ -200,10 +200,18 @@ if not selected_metric_data["df_col"][0] in data.columns:
     st.stop()
 
 # creating color map
-metric_cm = cm.linear.viridis.scale(
-    math.floor(data[selected_metric_data["df_col"][0]].min()),
-    math.ceil(data[selected_metric_data["df_col"][0]].max()),
-)
+if math.floor(data[selected_metric_data["df_col"][0]].min()) == math.ceil(
+    data[selected_metric_data["df_col"][0]].max()
+):
+    metric_cm = cm.linear.viridis.scale(
+        math.floor(data[selected_metric_data["df_col"][0]].min()),
+        math.ceil(data[selected_metric_data["df_col"][0]].max()) + 1,
+    )
+else:
+    metric_cm = cm.linear.viridis.scale(
+        math.floor(data[selected_metric_data["df_col"][0]].min()),
+        math.ceil(data[selected_metric_data["df_col"][0]].max()),
+    )
 
 # add station markers
 for row in data.iterrows():
