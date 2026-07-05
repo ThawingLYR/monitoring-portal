@@ -14,6 +14,7 @@ services:
     volumes:
       - config:/streamlit-app/config:ro
       - data:/streamlit-app/data:ro
+      - figure:/streamlit-app/figure:ro
 
   cron-tasks:
     build:
@@ -32,4 +33,5 @@ services:
 
 volumes:
   config:
+  figure:
   data: 
