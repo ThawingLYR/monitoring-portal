@@ -1,0 +1,27 @@
+services:
+  streamlit-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: streamlit-app
+
+    depends_on:
+      - cron-tasks
+
+    volumes:
+      - config:/streamlit-app/config
+      - data:/streamlit-app/data
+
+  cron-tasks:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: cron-tasks
+
+    volumes:
+      - config:/streamlit-app/config
+      - data:/streamlit-app/data
+
+volumes:
+  config:
+  data: 

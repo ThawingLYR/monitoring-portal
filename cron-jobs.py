@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
+# Prepare the data for all boreholes and generate the figures
 config_manager = ConfigManager()
 config_manager.load_config("boreholes")
 configs = config_manager.get_stations("boreholes")

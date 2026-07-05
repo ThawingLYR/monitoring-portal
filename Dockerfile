@@ -13,8 +13,28 @@ WORKDIR /streamlit-app
 COPY --from=uv /streamlit-app/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Stage 3: Cron Tasks Image
+FROM python:${PYTHON_VERSION}-slim AS cron-tasks
+ARG VERSION
+ARG PYTHON_VERSION
+WORKDIR /streamlit-app
+
+# Copy only necessary files from the builder stage
+COPY --from=builder /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Copy application code
+COPY . .
+RUN echo "VERSION = '${VERSION}'" > ./src/app/version.py
+
+# Make run.sh executable
+RUN chmod +x cron-jobs.py run-cron.sh
+
+# Use run.sh as the entry point
+ENTRYPOINT ["./run-cron.sh"]
+
 # Stage 3: Runtime
-FROM python:${PYTHON_VERSION}-slim
+FROM python:${PYTHON_VERSION}-slim AS streamlit-app
 ARG VERSION
 ARG PYTHON_VERSION
 WORKDIR /streamlit-app
