@@ -1,44 +1,34 @@
 #!/bin/bash
+set -e
 
-if [ -z "${DOCKER_CRON}" ] || [ "${DOCKER_CRON}" != "1" ]; then
+if [ "${DOCKER_CRON}" != "1" ]; then
   echo "DOCKER_CRON must be set to 1. Exiting."
   exit 1
 fi
 
-export DOCKER_CRON=2
-
+LOCKFILE=/tmp/run-cron.lock
+exec 200>$LOCKFILE
+flock -n 200 || {
+  echo "Cron already running. Exiting."
+  exit 1
+}
 
 echo "Starting cron jobs..."
 
-# Set default repository if THAWINGLYR_CONFIG_REPO is not defined
 REPO_URL=${THAWINGLYR_CONFIG_REPO:-"https://github.com/ThawingLYR/monitoring-portal-configuration.git"}
-echo "Using repository URL: $REPO_URL"
-
 CONFIG_FOLDER="config"
 
-# Save the initial directory
-INITIAL_DIR=$(pwd)
+echo "Ensuring latest configuration from: $REPO_URL"
 
-
-echo "Making sure we are using the latest configuration..."
-if [ -d "$CONFIG_FOLDER" ]; then
-    # If the folder exists, pull the latest changes
-    echo "Folder '$CONFIG_FOLDER' exists. Pulling the latest changes..."
-    cd "$CONFIG_FOLDER" || exit
-    git pull origin main
-    # Return to the initial directory
-    cd "$INITIAL_DIR" || exit
+if [ -d "$CONFIG_FOLDER/.git" ]; then
+    echo "Updating existing config repo..."
+    git -C "$CONFIG_FOLDER" fetch origin
+    git -C "$CONFIG_FOLDER" reset --hard origin/main
 else
-    # If the folder does not exist, clone the repository
-    echo "Folder '$CONFIG_FOLDER' does not exist. Cloning the repository..."
+    echo "Cloning config repo..."
     git clone "$REPO_URL" "$CONFIG_FOLDER"
 fi
 
-echo "Let's run the cron jobs..."
+echo "Configuration ready. Running cron jobs..."
 
 python cron-jobs.py
-
-exec sh -c "sleep infinity & wait"
-
-export DOCKER_CRON=1
-
