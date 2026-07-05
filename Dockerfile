@@ -53,4 +53,6 @@ ENV SERVER_ADDRESS=localhost
 EXPOSE ${PORT}
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 
-ENTRYPOINT ["streamlit", "run", "streamlit_app.py", "--server.port=${PORT}", "--server.address=0.0.0.0", "--server.baseUrlPath=/", "--server.headless=false", "--browser.serverAddress=${SERVER_ADDRESS}"]
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
