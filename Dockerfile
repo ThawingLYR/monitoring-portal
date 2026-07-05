@@ -51,6 +51,6 @@ ENV PORT=8501
 ENV SERVER_ADDRESS=localhost
 
 EXPOSE ${PORT}
-HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
+# HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 
 ENTRYPOINT ["streamlit", "run", "/streamlit-app/streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
