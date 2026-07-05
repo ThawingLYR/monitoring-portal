@@ -30,6 +30,7 @@ services:
     volumes:
       - config:/streamlit-app/config
       - data:/streamlit-app/data
+      - figure:/streamlit-app/figure
 
 volumes:
   config:
