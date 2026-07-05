@@ -21,10 +21,10 @@ services:
       dockerfile: Dockerfile
       target: cron-tasks
 
-      environment:
-      - tilsig_username=${tilsig_username}
-      - tilsig_password=${tilsig_password}
-      - frost_client_id=${frost_client_id}
+    environment:
+    - tilsig_username=${tilsig_username}
+    - tilsig_password=${tilsig_password}
+    - frost_client_id=${frost_client_id}
 
     volumes:
       - config:/streamlit-app/config
