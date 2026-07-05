@@ -45,6 +45,8 @@ WORKDIR /streamlit-app
 COPY --from=builder /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
+RUN apt-get update && apt-get install -y curl && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Copy application code
 COPY . .
 RUN echo "VERSION = '${VERSION}'" > ./src/app/version.py

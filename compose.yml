@@ -12,8 +12,8 @@ services:
       - "8501:8501"
 
     volumes:
-      - config:/streamlit-app/config
-      - data:/streamlit-app/data
+      - config:/streamlit-app/config:ro
+      - data:/streamlit-app/data:ro
 
   cron-tasks:
     build:
