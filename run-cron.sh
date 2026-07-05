@@ -31,5 +31,6 @@ echo "Let's run the cron jobs..."
 
 python cron-jobs.py
 
+exec sh -c "sleep infinity & wait"
 
 
