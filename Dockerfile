@@ -19,6 +19,8 @@ ARG VERSION
 ARG PYTHON_VERSION
 WORKDIR /streamlit-app
 
+RUN apt-get update && apt-get install -y git && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Copy only necessary files from the builder stage
 COPY --from=builder /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
@@ -28,10 +30,10 @@ COPY . .
 RUN echo "VERSION = '${VERSION}'" > ./src/app/version.py
 
 # Make run.sh executable
-RUN chmod +x cron-jobs.py run-cron.sh
+RUN chmod +x cron-jobs.py run-cron.sh entrypoint.sh
 
 # Use run.sh as the entry point
-ENTRYPOINT ["/streamlit-app/run-cron.sh"]
+ENTRYPOINT ["/streamlit-app/entrypoint.sh"]
 
 # Stage 3: Runtime
 FROM python:${PYTHON_VERSION}-slim AS streamlit-app
@@ -51,6 +53,6 @@ ENV PORT=8501
 ENV SERVER_ADDRESS=localhost
 
 EXPOSE ${PORT}
-# HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
+HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 
 ENTRYPOINT ["streamlit", "run", "/streamlit-app/streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
