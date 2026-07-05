@@ -2,6 +2,9 @@
 
 # Check if DOCKER-CRON is set
 if [ -n "$DOCKER_CRON" ]; then
+
+    export DOCKER_CRON=1
+
     # Run the Python script once (with instance check)
     /streamlit-app/run-cron.sh
 
@@ -12,7 +15,7 @@ if [ -n "$DOCKER_CRON" ]; then
     # Keep the container running, but respect termination signals
     exec sh -c "sleep infinity & wait"
 
-    export DOCKER_CRON=1
+    
 else
     # Default behavior: just run the Python script
     exec /streamlit-app/run-cron.sh
