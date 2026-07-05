@@ -31,7 +31,7 @@ RUN echo "VERSION = '${VERSION}'" > ./src/app/version.py
 RUN chmod +x cron-jobs.py run-cron.sh
 
 # Use run.sh as the entry point
-ENTRYPOINT ["./run-cron.sh"]
+ENTRYPOINT ["/streamlit-app/run-cron.sh"]
 
 # Stage 3: Runtime
 FROM python:${PYTHON_VERSION}-slim AS streamlit-app
@@ -53,6 +53,4 @@ ENV SERVER_ADDRESS=localhost
 EXPOSE ${PORT}
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 
-RUN chmod +x entrypoint.sh
-
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["streamlit", "run", "/streamlit-app/streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
