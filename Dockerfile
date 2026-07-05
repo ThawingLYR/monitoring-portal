@@ -47,7 +47,10 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY . .
 RUN echo "VERSION = '${VERSION}'" > ./src/app/version.py
 
-EXPOSE 8501
+ENV PORT=8501
+ENV SERVER_ADDRESS=localhost
+
+EXPOSE ${PORT}
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 
-ENTRYPOINT ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+ENTRYPOINT ["streamlit", "run", "streamlit_app.py", "--server.port=${PORT}", "--server.address=0.0.0.0", "--server.baseUrlPath=/", "--server.headless=false", "--browser.serverAddress=${SERVER_ADDRESS}"]
