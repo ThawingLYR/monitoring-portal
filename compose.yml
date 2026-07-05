@@ -4,6 +4,9 @@ services:
       context: .
       dockerfile: Dockerfile
       target: streamlit-app
+    
+    environment:
+      - SERVER_ADDRESS=${SERVER_ADDRESS}
 
     depends_on:
       - cron-tasks
