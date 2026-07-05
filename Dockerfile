@@ -53,6 +53,6 @@ ENV SERVER_ADDRESS=localhost
 EXPOSE ${PORT}
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 
-RUN chmod +x /entrypoint.sh
+RUN chmod +x entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
