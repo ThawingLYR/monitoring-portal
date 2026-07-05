@@ -8,6 +8,9 @@ services:
     depends_on:
       - cron-tasks
 
+    ports:
+      - "8501:8501"
+
     volumes:
       - config:/streamlit-app/config
       - data:/streamlit-app/data
@@ -17,6 +20,11 @@ services:
       context: .
       dockerfile: Dockerfile
       target: cron-tasks
+
+      environment:
+      - tilsig_username=${tilsig_username}
+      - tilsig_password=${tilsig_password}
+      - frost_client_id=${frost_client_id}
 
     volumes:
       - config:/streamlit-app/config
