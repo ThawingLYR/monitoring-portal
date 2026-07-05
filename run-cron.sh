@@ -1,11 +1,6 @@
 #!/bin/bash
 set -e
 
-if [ "${DOCKER_CRON}" != "1" ]; then
-  echo "DOCKER_CRON must be set to 1. Exiting."
-  exit 1
-fi
-
 LOCKFILE=/tmp/run-cron.lock
 exec 200>$LOCKFILE
 flock -n 200 || {
