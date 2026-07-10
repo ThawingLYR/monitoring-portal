@@ -276,7 +276,7 @@ wheels = [
 
 [[package]]
 name = "dask"
-version = "2026.3.0"
+version = "2026.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -287,9 +287,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "toolz" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d7/2a/5d8cc1579590af86576dde890254440e478c7174b93a02095ecfc2e6ba38/dask-2026.3.0.tar.gz", hash = "sha256:f7d96c8274e8a900d217c1ff6ea8d1bbf0b4c2c21e74a409644498d925eb8f85", size = 11000710, upload-time = "2026-03-18T07:10:14.945Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4d/b5/aa50877159f1efd65a744107e0662a15d2b80fa0c427d980313367f49493/dask-2026.7.0.tar.gz", hash = "sha256:b039970642ce97a063070bae2763dada8aae27e3cbd8ff6d894072f920a1e252", size = 11548914, upload-time = "2026-07-06T16:58:36.496Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4a/f3/00bb1e867fba351e2d784170955713bee200c43ea306c59f30bd7e748192/dask-2026.3.0-py3-none-any.whl", hash = "sha256:be614b9242b0b38288060fb2d7696125946469c98a1c30e174883fd199e0428d", size = 1485630, upload-time = "2026-03-18T07:10:12.832Z" },
+    { url = "https://files.pythonhosted.org/packages/90/aa/ceeb81d9dc886d445416310f0eff5c3978f20224b4143e96e36b7e85b011/dask-2026.7.0-py3-none-any.whl", hash = "sha256:68def8b467529ab8425ef9fcc6735dcaefaaf715d5e19ae219485f99a394dbef", size = 1496878, upload-time = "2026-07-06T16:58:34.597Z" },
 ]
 
 [[package]]
@@ -791,7 +791,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "dask", specifier = ">=2026.3.0" },
+    { name = "dask", specifier = ">=2026.7.0" },
     { name = "datetime", specifier = ">=6.0" },
     { name = "folium", specifier = ">=0.20.0" },
     { name = "loguru", specifier = ">=0.7.3" },
