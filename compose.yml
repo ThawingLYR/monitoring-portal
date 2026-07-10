@@ -4,6 +4,11 @@ services:
       context: .
       dockerfile: Dockerfile
       target: streamlit-app
+
+    # If you are in development, uncomment the following lines to expose the streamlit app to your host machine.
+    # Traefik will automatically route the traffic to the correct container in production.
+    # ports:
+    #   - "8501:8501"
     
     volumes:
       - config:/streamlit-app/config:ro
