@@ -15,7 +15,7 @@ dependencies = [
     "plotly>=6.7.0",
     "pydantic>=2.13.4",
     "requests>=2.34.2",
-    "streamlit>=1.57.0",
+    "streamlit>=1.59.1",
     "streamlit-folium>=0.27.2",
 ]
 
