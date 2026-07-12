@@ -111,6 +111,37 @@ For **production** or **local testing**, use the provided Docker container.
   ```
    The app will be accessible at [http://localhost:8501](http://localhost:8501).
 
+### Docker Compose Setup
+
+**For a complete setup** with both the Streamlit web application and background cron jobs, use `docker-compose`:
+
+In a local machine, uncomment the port forwarding in the docker compose file.
+
+1. **Set up environment variables:**
+
+   Create a `.env` file in the project root with your API credentials:
+   ```env
+   tilsig_username=your_tilsig_username
+   tilsig_password=your_tilsig_password
+   frost_client_id=your_frost_client_id
+   THAWINGLYR_CONFIG_REPO=https://github.com/ThawingLYR/monitoring-portal-configuration.git
+   ```
+
+2. **Start all services:**
+
+   ```bash
+   docker-compose up -d
+   ```
+
+   This will start:
+   - **streamlit-app**: Web interface at [http://localhost:8501](http://localhost:8501)
+   - **cron-tasks**: Background job service for data synchronization
+
+3. **Stop services:**
+
+   ```bash
+   docker-compose down
+   ```
 > [!IMPORTANT]  
 > **For production**, run the app behind a reverse proxy (e.g., [Caddy](https://caddyserver.com/)) to handle **TLS termination** and ensure secure connections.
 
