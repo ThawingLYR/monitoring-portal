@@ -8,6 +8,7 @@ dependencies = [
     "dask>=2026.3.0",
     "datetime>=6.0",
     "folium>=0.20.0",
+    "geopandas>=1.1.4",
     "loguru>=0.7.3",
     "matplotlib>=3.11.0",
     "numpy>=2.4.4",
