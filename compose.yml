@@ -5,6 +5,12 @@ services:
       dockerfile: Dockerfile
       target: streamlit-app
 
+    restart: always
+
+    depends_on:
+      map-init:
+        condition: service_completed_successfully
+
     # If you are in development, uncomment the following lines to expose the streamlit app to your host machine.
     # Traefik will automatically route the traffic to the correct container in production.
     # ports:
@@ -14,12 +20,29 @@ services:
       - config:/streamlit-app/config:ro
       - data:/streamlit-app/data:ro
       - figure:/streamlit-app/figure:ro
+      - map_data:/streamlit-app/map_data:ro
+
+  map-init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: map-init
+
+    restart: on-failure  
+    
+    environment:
+      - map_geomorph_key=${map_geomorph_key}   
+    
+    volumes:
+      - map_data:/streamlit-app/map_data:rw
 
   cron-tasks:
     build:
       context: .
       dockerfile: Dockerfile
       target: cron-tasks
+
+    restart: always
 
     environment:
     - tilsig_username=${tilsig_username}
@@ -34,4 +57,5 @@ services:
 volumes:
   config:
   figure:
-  data: 
+  data:
+  map_data:
