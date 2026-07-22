@@ -65,7 +65,8 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 RUN apt-get update && apt-get install -y curl && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy application code
-COPY streamlit_app.py ./src ./
+COPY streamlit_app.py ./
+COPY ./src ./src
 RUN echo "VERSION = '${VERSION}'" > ./src/app/version.py
 
 ENV PORT=8501

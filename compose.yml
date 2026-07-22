@@ -15,7 +15,7 @@ services:
     # Traefik will automatically route the traffic to the correct container in production.
     # ports:
     #   - "8501:8501"
-    
+
     volumes:
       - config:/streamlit-app/config:ro
       - data:/streamlit-app/data:ro
@@ -28,11 +28,11 @@ services:
       dockerfile: Dockerfile
       target: map-init
 
-    restart: on-failure  
-    
+    restart: on-failure
+
     environment:
-      - map_geomorph_key=${map_geomorph_key}   
-    
+      - map_geomorph_key=${map_geomorph_key}
+
     volumes:
       - map_data:/streamlit-app/map_data:rw
 
@@ -45,9 +45,9 @@ services:
     restart: always
 
     environment:
-    - tilsig_username=${tilsig_username}
-    - tilsig_password=${tilsig_password}
-    - frost_client_id=${frost_client_id}
+      - tilsig_username=${tilsig_username}
+      - tilsig_password=${tilsig_password}
+      - frost_client_id=${frost_client_id}
 
     volumes:
       - config:/streamlit-app/config
