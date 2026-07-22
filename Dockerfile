@@ -35,6 +35,23 @@ RUN chmod +x cron-jobs.py run-cron.sh entrypoint.sh
 # Use run.sh as the entry point
 ENTRYPOINT ["/streamlit-app/entrypoint.sh"]
 
+# Stage 3: Map initialization
+FROM python:${PYTHON_VERSION}-slim AS map-init
+ARG VERSION
+ARG PYTHON_VERSION
+WORKDIR /streamlit-app
+
+# Copy only necessary files from the builder stage
+COPY --from=builder /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Copy application code
+COPY . .
+RUN echo "VERSION = '${VERSION}'" > ./src/app/version.py
+
+# Can add more init here
+CMD [ "python", "-m", "src.init.init_geomorph_map" ]
+
 # Stage 3: Runtime
 FROM python:${PYTHON_VERSION}-slim AS streamlit-app
 ARG VERSION
@@ -48,7 +65,8 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 RUN apt-get update && apt-get install -y curl && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy application code
-COPY . .
+COPY streamlit_app.py ./
+COPY ./src ./src
 RUN echo "VERSION = '${VERSION}'" > ./src/app/version.py
 
 ENV PORT=8501
