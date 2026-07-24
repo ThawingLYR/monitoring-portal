@@ -23,7 +23,7 @@ dependencies = [
 dev = [
     "ipykernel>=7.3.0",
     "nbformat>=4.2.0",
-    "pre-commit>=4.6.0",
+    "pre-commit>=4.6.1",
     "python-dotenv>=1.2.2",
     "ruff>=0.15.12",
 ]
