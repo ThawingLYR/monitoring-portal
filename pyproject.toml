@@ -16,7 +16,7 @@ dependencies = [
     "pydantic>=2.13.4",
     "requests>=2.34.2",
     "streamlit>=1.57.0",
-    "streamlit-folium>=0.27.2",
+    "streamlit-folium>=0.27.3",
 ]
 
 [dependency-groups]
