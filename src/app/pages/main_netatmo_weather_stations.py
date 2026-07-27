@@ -9,6 +9,7 @@ import math
 from loguru import logger
 
 from src.app.reusable.folium_basemap import get_folium_basemap
+from sources_weather_stations_netatmo import metrics
 
 from sources_unis_netatmo_weather_stations import (
     lookup_by_station_address_NETATMO,
@@ -65,65 +66,6 @@ def check_availability(df: pd.DataFrame):
 
     return df
 
-
-metrics = {
-    "temp": {
-        "infotext": "Temperature in °C measured in the last 20 minutes.",
-        "df_col": ["temperature"],
-        "df_time_col": "temp_timeutc",
-        "icon": "temperature-low",
-        "text": ["", "°C"],
-        "legend": "Temperature (°C)",
-    },
-    "wind_g": {
-        "infotext": "Wind gust in m/s measured in the last 20 minutes.",
-        "df_col": ["gust_strength", "gust_angle"],
-        "df_time_col": "wind_timeutc",
-        "icon": "arrow-down",
-        "text": ["", "m/s", "°"],
-        "legend": "Wind Gust (m/s)",
-    },
-    "wind_s": {
-        "infotext": "Wind strength in m/s measured in the last 20 minutes.",
-        "df_col": ["wind_strength", "wind_angle"],
-        "df_time_col": "wind_timeutc",
-        "icon": "arrow-down",
-        "text": ["", "m/s", "°"],
-        "legend": "Wind Strength (m/s)",
-    },
-    "rain_60": {
-        "infotext": "Rain in mm in the last 60 minutes.",
-        "df_col": ["rain_60min"],
-        "df_time_col": "rain_timeutc",
-        "icon": "droplet",
-        "text": ["", "mm"],
-        "legend": "Rain (mm)",
-    },
-    "rain_24": {
-        "infotext": "Rain in mm in the last 24 hours.",
-        "df_col": ["rain_24h"],
-        "df_time_col": "rain_timeutc",
-        "icon": "droplet",
-        "text": ["", "mm"],
-        "legend": "Rain (mm)",
-    },
-    "hum": {
-        "infotext": "Humidity in % measured in the last 20 minutes.",
-        "df_col": ["humidity"],
-        "df_time_col": "temp_timeutc",
-        "icon": "tint",
-        "text": ["", "%"],
-        "legend": "Humidity (%)",
-    },
-    "p": {
-        "infotext": "Pressure in hPa measured in the last 20 minutes.",
-        "df_col": ["pressure"],
-        "df_time_col": "pres_timeutc",
-        "icon": "tachometer",
-        "text": ["", "hPa"],
-        "legend": "Pressure (hPa)",
-    },
-}
 
 if "selected_metric" not in st.session_state:
     st.session_state.selected_metric = "temp"
@@ -214,6 +156,7 @@ else:
     )
 
 # add station markers
+# adding more comments
 for row in data.iterrows():
     if pd.isna(row[1][selected_metric_data["df_time_col"]]):
         logger.info(
