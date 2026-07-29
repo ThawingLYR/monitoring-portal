@@ -1,7 +1,7 @@
 # Imports
 import streamlit as st
-import folium
 from streamlit_folium import st_folium
+import folium
 
 from src.app.reusable.folium_basemap import get_folium_basemap
 
@@ -38,7 +38,6 @@ st.set_page_config(page_title="Ground temperature data visualization", layout="w
 st.title("Ground temperature data visualization")
 
 m = get_folium_basemap()
-folium.LayerControl().add_to(m)
 # Create markers with popup texts and icons
 # icon_ws = folium.Icon(color='blue',icon='cloud')
 

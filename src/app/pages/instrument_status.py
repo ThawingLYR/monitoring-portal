@@ -1,4 +1,5 @@
 # Imports
+import folium.raster_layers
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
@@ -23,7 +24,6 @@ status = instrument_status_Tilsig(sources_tilsig)
 
 # Create map centered near Longyearbyen
 m = get_folium_basemap()
-folium.LayerControl().add_to(m)
 
 # Create markers with popup texts and icons
 for i in range(len(marker_tilsig_html)):

@@ -31,7 +31,6 @@ st.set_page_config(page_title="Weather stations", layout="wide")
 st.title("Weather stations")
 
 m = get_folium_basemap()
-folium.LayerControl().add_to(m)
 
 # Create markers with popup texts and icons
 
