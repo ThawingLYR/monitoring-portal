@@ -38,6 +38,8 @@ Thumbs.db
 *.json
 *.parquet
 /data/
+/figure/
+/map_data/
 LyBQuatMap10k_Rubensdotter_2022_EPSG32633.geojson
 
 # Environment and logs
