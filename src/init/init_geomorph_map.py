@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 from pandas import DataFrame
 import py7zr
+from loguru import logger
 
 from src.auth.secrets import get_secret
 from src.utils.load_json_file import load_json, load_geojson_into_gdf
@@ -53,6 +54,12 @@ def get_geomorph_legend():
 
 
 def init_geomorph_geojson():
+
+    try:
+        MAPPING_PROCESSED_PATH.parent.mkdir(parents=True, exist_ok=True)
+        logger.debug("Path created")
+    except Exception as e:
+        logger.error(e)
 
     # Open encrypted file
     password = get_secret("map_geomorph_key")
