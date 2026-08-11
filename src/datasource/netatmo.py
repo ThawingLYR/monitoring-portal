@@ -2,14 +2,14 @@ from src.datasource.datasource_model import DataSource
 from src.config.config_class import StationConfig
 from src.utils.utc_managment import make_utc
 from src.config.config_class import StationSensors
-
 from src.auth.secret_manager import LocalSecretManager
+from sources_weather_stations_netatmo import rename_dic
 
 from requests import Session, post
 
 from typing import Any, Dict
 from pandas import DataFrame, to_datetime
-from datetime import datetime
+from datetime import datetime, timedelta, UTC
 
 import pandas as pd
 import numpy as np
@@ -29,10 +29,7 @@ class NetatmoDataSource(DataSource):
 
     def get_data(
         self,
-        start_time: datetime = None,
-        end_time: datetime = None,
-        sensors: list[StationSensors] = None,
-        variables: list[str] = None,
+        **kwargs,
     ) -> DataFrame:
 
         endpoint = "https://api.netatmo.com/api/getpublicdata"
@@ -42,6 +39,7 @@ class NetatmoDataSource(DataSource):
         lyr_coords = [78.226902, 15.689416, 78.216516, 15.590670]
         big_area_coords = [78.25, 16.3, 78.15, 15.3]
         coords = [lyr_coords, big_area_coords]
+        df: DataFrame = pd.DataFrame()  # Initialize an empty DataFrame
 
         for lat_ne, lon_ne, lat_sw, lon_sw in coords:
             logger.info(
@@ -63,28 +61,16 @@ class NetatmoDataSource(DataSource):
                     f"Error fetching data from NETATMO API for coordinates {lat_ne}/{lon_ne} and {lat_sw}/{lon_sw}: {data_2_check.get('error', {}).get('message', 'No error message provided')}"
                 )
             else:
-                if (df := self._format_data(data_2_check)) is not None:
+                df: DataFrame = self._format_data(data_2_check)
+                if not df.empty:
                     break
 
-        if len(dfs) == 0:
-            raise Exception(
-                "Failed to fetch data from NETATMO API for all specified areas."
-            )
-        if len(dfs) == 1:
-            return dfs[0]
-        if len(dfs) > 1:
-            df = pd.concat(dfs)
-            df = df.drop_duplicates(
-                subset=["MacAdress"],
-                keep="last",
-            )
-        df_part = df.loc[df["MacAdress"] == self._get_MacAdress(), :].copy()
-        if df_part.empty:
-            raise Exception(
-                f"No data found for station with MacAdress {self._get_MacAdress()}"
+        if df.empty:
+            raise ValueError(
+                f"No valid data returned from NETATMO API for Sensor {self.config.sourceID}."
             )
 
-        return df_part
+        return df
 
     def _get_session(self) -> Session:
 
@@ -133,7 +119,7 @@ class NetatmoDataSource(DataSource):
 
     def _format_data(self, data: Dict[str, Any]) -> DataFrame:
 
-        def __get_res_time(sensor_data):
+        def __get_res_time(sensor_data: Dict[str, Any]) -> pd.Timestamp | None:
             for key in ("wind_timeutc", "rain_timeutc"):
                 if key in sensor_data:
                     return (
@@ -144,29 +130,27 @@ class NetatmoDataSource(DataSource):
             return None
 
         mac_address = self._get_MacAdress()
-        df: pd.DataFrame | None = None
+        measurements = []  # storage of the single measurement DataFrames
         for entry in data.get("body", []):
             _id = entry.get("_id")
             if _id != mac_address:
                 continue  # Skip entries that don't match the desired MacAdress
             longitude, latitude = entry.get("place", {}).get("location", [None, None])
-            if round(latitude, 6) != round(self.config.latitude, 6) or round(
-                longitude, 6
-            ) != round(self.config.longitude, 6):
+            # checking if the station has moved, if so log a warning, should be a warning if
+            # moved more than 10 meters (if I remember correctly)
+            if round(latitude, 6) != round(
+                self.config.coordinates.latitude, 6
+            ) or round(longitude, 6) != round(self.config.coordinates.longitude, 6):
                 logger.warning(
-                    f"Station {self.config.sourceID} may have changed location (from {self.config.latitude}, {self.config.longitude} to {latitude}, {longitude})."
+                    f"Station {self.config.sourceID} may have changed location (from {self.config.coordinates.latitude}, {self.config.coordinates.longitude} to {latitude}, {longitude})."
                 )
 
-            if "timezone" in entry.get("place", {}):
-                timezone = entry.get("place", {}).get("timezone")
-            else:
-                timezone = np.nan
-                logger.warning(f"No timezone info for station {self.config.sourceID}.")
-
-            # air_temperature, relative_humidity, air_pressure = None, None, None
-            measurements = []
             measures = entry.get("measures", {})
+            # all times get rounded to the nearest minute
             for sensor, sensor_data in measures.items():
+                # if sensor_data contains "type" and "res", it's either
+                # the indoor preassure sensor or the outdoor temperature sensor
+                # with humidity
                 if "type" in sensor_data and "res" in sensor_data:
                     res_time = int(
                         list(sensor_data.get("res", {"00000": []}).keys())[0]
@@ -190,6 +174,8 @@ class NetatmoDataSource(DataSource):
                                 columns=[sensor_data["type"][i]],
                             )
                         )
+                # the wind and rain sensor always start with this Mac address
+                # and have a slightly different structure, so they are handled separately
                 elif sensor.startswith("06:00:00") or sensor.startswith("05:00:00"):
                     res_time = __get_res_time(sensor_data)
                     if res_time is None:
@@ -203,57 +189,27 @@ class NetatmoDataSource(DataSource):
                                     columns=[name],
                                 )
                             )
+            break  # Exit after processing the first matching station
 
+        df: pd.DataFrame = pd.DataFrame()  # Initialize an empty DataFrame
         if measurements:
-            df = pd.concat(measurements, axis=1)
-            df.rename()
+            df = pd.concat(
+                measurements, axis=1
+            )  # concatenate all measurement DataFrames into a single DataFrame
+            df.rename(rename_dic, axis=1, inplace=True)
+            if len(df.columns) > len(rename_dic):
+                logger.warning(
+                    f"Some columns in the DataFrame for {self.config.sourceID} were not renamed. Columns: {df.columns}"
+                )
+            df.sort_index(inplace=True)
+            # removing data that is older than 15 minutes, since the crone job is in that interval
+            df = df[df.index > datetime.now(UTC) - timedelta(minutes=15)]
+            if df.empty:
+                logger.warning(
+                    f"No recent data (last 15 minutes) available for station {self.config.sourceID}."
+                )
 
-            # structured_data.append(
-            #     {
-            #         "MacAdress": _id,
-            #         "timestamp": time_server,
-            #         "timezone": timezone,
-            #         "air_temperature": temperature,
-            #         "relative_humidity": humidity,
-            #         "temp_timeutc": temp_time,
-            #         "air_pressure": pressure,
-            #         "pres_timeutc": pres_time,
-            #         "wind_speed": wind_strength,
-            #         "wind_from_direction": wind_angle,
-            #         "wind_speed_of_gust": gust_strength,
-            #         "wind_gust_from_direction": gust_angle,
-            #         "wind_timeutc": wind_timeutc,
-            #         "rainfall_amount-": rain_60min,
-            #         "rain_24h": rain_24h,
-            #         "rain_live": rain_live,
-            #         "rain_timeutc": rain_timeutc,
-            #     }
-            # )
-            # df_netatmo = pd.DataFrame(
-            #     structured_data,
-            #     columns=[
-            #         "MacAdress",
-            #         "timezone",
-            #         "air_temperature",
-            #         "relative_humidity",
-            #         "temp_timeutc",
-            #         "air_pressure",
-            #         "pres_timeutc",
-            #         "wind_speed",
-            #         "wind_from_direction",
-            #         "wind_speed_of_gust",
-            #         "wind_gust_from_direction",
-            #         "wind_timeutc",
-            #         "rainfall_amount-",
-            #         "rain_24h",
-            #         "rain_live",
-            #         "rain_timeutc",
-            #     ],
-            # )
-
-            # implement mulit timestamps
-
-        return df_netatmo
+        return df
 
     def _get_MacAdress(self) -> str:
         """

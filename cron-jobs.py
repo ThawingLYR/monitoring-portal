@@ -18,12 +18,9 @@ for config in configs:
     for plot in all_boreholes_figures:
         sensor.prepare_figure(plot)
 
-# Prepare the data for all boreholes and generate the figures
+# Prepare the data for all aws stations
 config_manager = ConfigManager()
 config_manager.load_config("aws")
 configs = config_manager.get_stations("aws")
 for config in configs:
     sensor = SensorAWS(config=config)
-    sensor.update_latest_data()
-    # for plot in all_boreholes_figures:
-    #     sensor.prepare_figure(plot)
