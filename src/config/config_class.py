@@ -24,7 +24,7 @@ from src.utils.utc_managment import make_utc
 StationType = Literal["boreholes", "aws"]
 
 # Define all the data providers.
-DataProvider = Literal["frost", "tilsig"]
+DataProvider = Literal["frost", "tilsig", "netatmo"]
 
 
 class StationPosition(BaseModel):
