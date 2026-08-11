@@ -1,3 +1,4 @@
+from src.auth.secrets import get_secret
 import os
 from cryptography.fernet import Fernet
 import json
@@ -9,13 +10,13 @@ class LocalSecretManager:
 
     def __init__(self, secret_file: str = "./secrets/secrets.enc"):
         self.secret_file = secret_file
+        self.key = get_secret("local_store_secret_key")
         if not os.path.exists(self.secret_file):
             logger.warning(
                 "Secret file '%s' does not exist. Creating a empty one.",
                 self.secret_file,
             )
             self.save_secrets({})
-        self.key = os.getenv("local_store_secret_key")
         if not self.key:
             raise ValueError("Environment variable 'local_store_secret_key' not set.")
 
@@ -47,7 +48,9 @@ class LocalSecretManager:
 
         return self._decrypt_secrets(encrypted_data)
 
-    def get_secret(self, key: str, default: str = "", create: bool = True) -> str:
+    def get_encrypted_secret(
+        self, key: str, default: str = "", create: bool = True
+    ) -> str:
         """Retrieve a specific secret by its key."""
         secrets = self.load_secrets()
         if create and key not in secrets:
