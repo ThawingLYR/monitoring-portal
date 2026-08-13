@@ -36,6 +36,7 @@ Thumbs.db
 # Data
 *.csv
 *.json
+*.geojson
 *.parquet
 /data/
 /figure/
