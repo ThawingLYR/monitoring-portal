@@ -1,36 +1,34 @@
 from pathlib import Path
-from pandas import DataFrame
 import py7zr
 from loguru import logger
 
 from src.auth.secrets import get_secret
-from src.utils.load_json_file import load_json, load_geojson_into_gdf
+from src.utils.load_json_file import load_geojson_into_gdf
 from src.utils.load_html import load_html_string
 
 project_root = Path(__file__).resolve().parents[2]
 ENCRYPED_PATH = project_root / "map_data_source" / "HVR_CH_MB.7z"
 OUTPUT_PATH = project_root / "map_data_source" / "risk"
-GEOJSON_PATH = project_root / "map_data_source" / "risk" / "MB_LYR.geojson"
-JSON_PATH = project_root / "map_data_source" / "risk" / "bygningstypekode.json"
-GEOJSON_PROCESSED_PATH = project_root / "map_data" / "risk" / "MB_LYR_Processed.geojson"
-LEGEND_PROCESSED_PATH = project_root / "map_data" / "risk" / "mb_map_legend.html"
+GEOJSON_PATH = project_root / "map_data_source" / "risk" / "CH_LYR.geojson"
+GEOJSON_PROCESSED_PATH = project_root / "map_data" / "risk" / "CH_LYR_Processed.geojson"
+LEGEND_PROCESSED_PATH = project_root / "map_data" / "risk" / "ch_map_legend.html"
 
 
-def get_mb_gdf():
+def get_ch_gdf():
     # Get modern buildings processed data
     gdf = load_geojson_into_gdf(GEOJSON_PROCESSED_PATH)
 
     return gdf
 
 
-def get_mb_legend():
+def get_ch_legend():
     # Get modern buildings map legend
     legend = load_html_string(LEGEND_PROCESSED_PATH)
 
     return legend
 
 
-def init_mb_geojson():
+def init_ch_geojson():
 
     try:
         GEOJSON_PROCESSED_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -45,21 +43,9 @@ def init_mb_geojson():
 
     # Get data from its online source (or for now in map_data_source, for now unzipped and unencrypted)
     gdf = load_geojson_into_gdf(GEOJSON_PATH)
-    config = load_json(JSON_PATH)
 
     # Drop irrelevant columns
-    gdf = gdf.drop(columns=["MB_date", "HVR_date"])
-
-    # Convert column type
-    gdf["MB_type"] = gdf["MB_type"].astype("int64")
-
-    # Convert conguration to dataframe and match MB_type to add configuration to GeoPandas GeoDataFrame (gdf)
-    df_config_risk = DataFrame(config)
-    gdf = gdf.merge(
-        df_config_risk[["MB_type", "navn"]],
-        on="MB_type",
-        how="left",
-    )
+    gdf = gdf.drop(columns=["FID", "CH_date", "HVR_date"])
 
     # Save gdf as geojson
     gdf.to_file(GEOJSON_PROCESSED_PATH)
@@ -72,15 +58,19 @@ def init_mb_geojson():
         <div class='legend-col'>
         <div class='legend-title'>Risk score</div>
         <ul class='legend-list split'>
-            <li><span class='colorbox' style='background:#FBEC9A;'></span><span class='text'>0</span></li>
-            <li><span class='colorbox' style='background:#F4CC68;'></span><span class='text'>1</span></li>
-            <li><span class='colorbox' style='background:#ECA855;'></span><span class='text'>2</span></li>
-            <li><span class='colorbox' style='background:#E48751;'></span><span class='text'>3</span></li>
-            <li><span class='colorbox' style='background:#D2624D;'></span><span class='text'>4</span></li>
-            <li><span class='colorbox' style='background:#A54742;'></span><span class='text'>5</span></li>
-            <li><span class='colorbox' style='background:#73382F;'></span><span class='text'>6</span></li>
-            <li><span class='colorbox' style='background:#422818;'></span><span class='text'>7</span></li>
-            <li><span class='colorbox' style='background:#1A1A01;'></span><span class='text'>8</span></li>
+            <li><span class='colorbox' style='background:#FFFECB;'></span><span class='text'>0</span></li>
+            <li><span class='colorbox' style='background:#FBE890;'></span><span class='text'>1</span></li>
+            <li><span class='colorbox' style='background:#F3CA5F;'></span><span class='text'>2</span></li>
+            <li><span class='colorbox' style='background:#ECAC54;'></span><span class='text'>3</span></li>
+            <li><span class='colorbox' style='background:#E79452;'></span><span class='text'>4</span></li>
+            <li><span class='colorbox' style='background:#E27B50;'></span><span class='text'>5</span></li>
+            <li><span class='colorbox' style='background:#D9604E;'></span><span class='text'>6</span></li>
+            <li><span class='colorbox' style='background:#BB4B48;'></span><span class='text'>7</span></li>
+            <li><span class='colorbox' style='background:#8F403D;'></span><span class='text'>8</span></li>
+            <li><span class='colorbox' style='background:#67342A;'></span><span class='text'>9</span></li>
+            <li><span class='colorbox' style='background:#452918;'></span><span class='text'>10</span></li>
+            <li><span class='colorbox' style='background:#2C200B;'></span><span class='text'>11</span></li>
+            <li><span class='colorbox' style='background:#191900;'></span><span class='text'>12</span></li>
         </ul>
         </div>
 
@@ -211,4 +201,4 @@ def init_mb_geojson():
 
 
 if __name__ == "__main__":
-    init_mb_geojson()
+    init_ch_geojson()

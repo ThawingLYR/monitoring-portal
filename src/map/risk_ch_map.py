@@ -5,28 +5,32 @@ from folium import Element
 import json
 
 from src.map.base_map import BaseMap
-from src.init.init_mb_map import get_mb_gdf
+from src.init.init_ch_map import get_ch_gdf
 
 
-class RiskMBMap(BaseMap):
+class RiskCHMap(BaseMap):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def _define_mb_polygon_style(self):
+    def _define_ch_polygon_style(self):
         """
         Build and return a style_function and highlight_function for GeoJson polygons.
         """
 
         color_scale_risk = [
-            "#FBEC9A",
-            "#F4CC68",
-            "#ECA855",
-            "#E48751",
-            "#D2624D",
-            "#A54742",
-            "#73382F",
-            "#422818",
-            "#1A1A01",
+            "#FFFECB",
+            "#FBE890",
+            "#F3CA5F",
+            "#ECAC54",
+            "#E79452",
+            "#E27B50",
+            "#D9604E",
+            "#BB4B48",
+            "#8F403D",
+            "#67342A",
+            "#452918",
+            "#2C200B",
+            "#191900",
         ]  # lajolla
         color_scale_vulnerability = [
             "#FFE599",
@@ -42,14 +46,14 @@ class RiskMBMap(BaseMap):
         # style functions used by folium.GeoJson
         def _style_function_risk(feature):
             style = dict(base)
-            style["fillColor"] = color_scale_risk[feature["properties"]["R_MB"]]
+            style["fillColor"] = color_scale_risk[feature["properties"]["R_CH"]]
 
             return style
 
         def _style_function_vuln(feature):
             style = dict(base)
             style["fillColor"] = color_scale_vulnerability[
-                feature["properties"]["V_MB"]
+                feature["properties"]["V_CH"]
             ]
 
             return style
@@ -102,10 +106,10 @@ class RiskMBMap(BaseMap):
         """
         popup = GeoJsonPopup(
             fields=[
-                "MB_type",
-                "navn",
-                "R_MB",
-                "V_MB",
+                "CH_type_NO",
+                "Desc_NO",
+                "R_CH",
+                "V_CH",
                 "H_norm",
                 "H_Geom",
                 "H_InSAR",
@@ -136,7 +140,7 @@ class RiskMBMap(BaseMap):
         self.m
 
         # Load geodataframe and convert to geojson
-        gdf = get_mb_gdf()
+        gdf = get_ch_gdf()
 
         # gdf['geometry'] = gdf['geometry'].simplify(tolerance=0.00005, preserve_topology=True)
 
@@ -151,7 +155,7 @@ class RiskMBMap(BaseMap):
             style_function_hinsar,
             style_function_hcoast,
             highlight_function,
-        ) = self._define_mb_polygon_style()
+        ) = self._define_ch_polygon_style()
 
         # Get popup (folium errors when using the same popup on multiple GeoJson layers)
         popup1 = self._popup()
