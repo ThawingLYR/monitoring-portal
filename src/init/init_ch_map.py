@@ -44,6 +44,13 @@ def init_ch_geojson():
     # Get data from its online source (or for now in map_data_source, for now unzipped and unencrypted)
     gdf = load_geojson_into_gdf(GEOJSON_PATH)
 
+    ### Processing part
+    # Reproject to WGS84 (lon/lat/h)
+    gdf = gdf.to_crs("EPSG:4326")
+
+    # Ignore h coordinate and irrelevant columns
+    gdf["geometry"] = gdf["geometry"].force_2d()
+
     # Drop irrelevant columns
     gdf = gdf.drop(columns=["FID", "CH_date", "HVR_date"])
 

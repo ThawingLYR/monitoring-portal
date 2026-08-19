@@ -141,9 +141,6 @@ class RiskCHMap(BaseMap):
 
         # Load geodataframe and convert to geojson
         gdf = get_ch_gdf()
-
-        # gdf['geometry'] = gdf['geometry'].simplify(tolerance=0.00005, preserve_topology=True)
-
         geojson = gdf.to_json()
 
         # Get style and highlight functions
