@@ -67,6 +67,14 @@ geomorphology = st.Page(
     "src/app/pages/geomorphology.py", title="Geomorphology", icon=":material/landscape:"
 )
 
+risk_modern_buildings = st.Page(
+    "src/app/pages/risk_mb.py", title="Modern buildings", icon=":material/house:"
+)
+
+risk_cultural_heritage = st.Page(
+    "src/app/pages/risk_ch.py", title="Cultural Heritage", icon=":material/cabin:"
+)
+
 landslide_model = st.Page(
     "src/app/pages/landslide_model.py",
     title="Landslide model",
@@ -97,6 +105,10 @@ pg = st.navigation(
             time_lapse_cameras,
         ],
         "Static maps": [ground_ice_content, geomorphology],
+        "Permafrost-related hazard, vulnerability and risk": [
+            risk_modern_buildings,
+            risk_cultural_heritage,
+        ],
         "Modeling": [landslide_model, weather_model],
         "Instrument status": [instrument_status],
     }
