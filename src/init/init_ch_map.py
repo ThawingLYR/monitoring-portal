@@ -7,8 +7,8 @@ from src.utils.load_json_file import load_geojson_into_gdf
 from src.utils.load_html import load_html_string
 
 project_root = Path(__file__).resolve().parents[2]
-ENCRYPED_PATH = project_root / "map_data_source" / "HVR_CH_MB.7z"
-OUTPUT_PATH = project_root / "map_data_source"
+ENCRYPED_PATH = project_root / "map_data_source" / "HVR_CH_MB_LYR.7z"
+OUTPUT_PATH = project_root / "map_data_source" / "risk"
 GEOJSON_PATH = project_root / "map_data_source" / "risk" / "CH_LYR.geojson"
 GEOJSON_PROCESSED_PATH = project_root / "map_data" / "risk" / "CH_LYR_Processed.geojson"
 LEGEND_PROCESSED_PATH = project_root / "map_data" / "risk" / "ch_map_legend.html"
@@ -43,13 +43,6 @@ def init_ch_geojson():
 
     # Get data from its online source (or for now in map_data_source, for now unzipped and unencrypted)
     gdf = load_geojson_into_gdf(GEOJSON_PATH)
-
-    ### Processing part
-    # Reproject to WGS84 (lon/lat/h)
-    gdf = gdf.to_crs("EPSG:4326")
-
-    # Ignore h coordinate and irrelevant columns
-    gdf["geometry"] = gdf["geometry"].force_2d()
 
     # Drop irrelevant columns
     gdf = gdf.drop(columns=["FID", "CH_date", "HVR_date"])

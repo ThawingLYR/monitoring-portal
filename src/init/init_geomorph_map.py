@@ -10,7 +10,7 @@ from src.utils.load_html import load_html_string
 
 project_root = Path(__file__).resolve().parents[2]
 ENCRYPED_PATH = project_root / "map_data_source" / "geomorphology.7z"
-OUTPUT_PATH = project_root / "map_data_source"
+OUTPUT_PATH = project_root / "map_data_source" / "geomorphology"
 GEOJSON_PATH = (
     project_root
     / "map_data_source"
@@ -33,7 +33,7 @@ LEGEND_PROCESSED_PATH = (
 
 
 def get_geomorph_gdf():
-    # Get geomoprhology processed data
+    # Get geomorphology processed data
     gdf = load_geojson_into_gdf(GEOJSON_PROCESSED_PATH)
 
     return gdf
