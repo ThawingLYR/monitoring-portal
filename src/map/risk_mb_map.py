@@ -5,7 +5,7 @@ from folium import Element
 import json
 
 from src.map.base_map import BaseMap
-from src.init.init_mb_map import get_mb_gdf
+from src.init.init_risk_map import get_mb_gdf
 
 
 class RiskMBMap(BaseMap):

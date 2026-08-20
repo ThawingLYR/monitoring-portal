@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit import iframe
 
 from src.map.risk_mb_map import RiskMBMap
-from src.init.init_mb_map import get_mb_legend
+from src.init.init_risk_map import get_mb_legend
 from src.utils.embed_folium_map import embed_folium_map
 
 # Page Setup
