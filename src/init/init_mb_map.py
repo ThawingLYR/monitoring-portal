@@ -8,8 +8,8 @@ from src.utils.load_json_file import load_json, load_geojson_into_gdf
 from src.utils.load_html import load_html_string
 
 project_root = Path(__file__).resolve().parents[2]
-ENCRYPED_PATH = project_root / "map_data_source" / "HVR_CH_MB.7z"
-OUTPUT_PATH = project_root / "map_data_source"
+ENCRYPED_PATH = project_root / "map_data_source" / "HVR_CH_MB_LYR.7z"
+OUTPUT_PATH = project_root / "map_data_source" / "risk"
 GEOJSON_PATH = project_root / "map_data_source" / "risk" / "MB_LYR.geojson"
 JSON_PATH = project_root / "map_data_source" / "risk" / "bygningstypekode.json"
 GEOJSON_PROCESSED_PATH = project_root / "map_data" / "risk" / "MB_LYR_Processed.geojson"
@@ -47,13 +47,6 @@ def init_mb_geojson():
     gdf = load_geojson_into_gdf(GEOJSON_PATH)
     config = load_json(JSON_PATH)
 
-    ### Processing part
-    # Reproject to WGS84 (lon/lat/h)
-    gdf = gdf.to_crs("EPSG:4326")
-
-    # Ignore h coordinate and irrelevant columns
-    gdf["geometry"] = gdf["geometry"].force_2d()
-
     # Drop irrelevant columns
     gdf = gdf.drop(columns=["MB_date", "HVR_date"])
 
@@ -63,7 +56,7 @@ def init_mb_geojson():
     # Convert conguration to dataframe and match MB_type to add configuration to GeoPandas GeoDataFrame (gdf)
     df_config_risk = DataFrame(config)
     gdf = gdf.merge(
-        df_config_risk[["MB_type", "navn"]],
+        df_config_risk.rename(columns={"kodeverdi": "MB_type"})[["MB_type", "navn"]],
         on="MB_type",
         how="left",
     )
