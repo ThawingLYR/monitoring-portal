@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit import iframe
 
 from src.map.risk_ch_map import RiskCHMap
-from src.init.init_ch_map import get_ch_legend
+from src.init.init_risk_map import get_ch_legend
 from src.utils.embed_folium_map import embed_folium_map
 
 # Page Setup

@@ -5,7 +5,7 @@ from folium import Element
 import json
 
 from src.map.base_map import BaseMap
-from src.init.init_ch_map import get_ch_gdf
+from src.init.init_risk_map import get_ch_gdf
 
 
 class RiskCHMap(BaseMap):
