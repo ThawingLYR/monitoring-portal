@@ -9,7 +9,7 @@ from src.utils.load_html import load_html_string
 
 project_root = Path(__file__).resolve().parents[2]
 ENCRYPED_PATH = project_root / "map_data_source" / "HVR_CH_MB.7z"
-OUTPUT_PATH = project_root / "map_data_source" / "risk"
+OUTPUT_PATH = project_root / "map_data_source"
 GEOJSON_PATH = project_root / "map_data_source" / "risk" / "MB_LYR.geojson"
 JSON_PATH = project_root / "map_data_source" / "risk" / "bygningstypekode.json"
 GEOJSON_PROCESSED_PATH = project_root / "map_data" / "risk" / "MB_LYR_Processed.geojson"
