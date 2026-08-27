@@ -33,6 +33,7 @@ services:
     environment:
       - map_geomorph_key=${map_geomorph_key}
       - map_risk_key=${map_risk_key}
+      - map_ground_ice_key=${map_ground_ice_key}
 
     volumes:
       - map_data:/streamlit-app/map_data:rw

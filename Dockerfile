@@ -51,7 +51,8 @@ RUN echo "VERSION = '${VERSION}'" > ./src/app/version.py
 
 # Can add more init here
 CMD ["sh", "-c", "python -m src.init.init_geomorph_map && \
-                   python -m src.init.init_risk_map" ]
+                   python -m src.init.init_risk_map && \
+                   python -m src.init.init_ground_ice_map" ]
 
 # Stage 3: Runtime
 FROM python:${PYTHON_VERSION}-slim AS streamlit-app

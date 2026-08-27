@@ -39,6 +39,6 @@ st.markdown(
 
     For more details on the data please see the corresponding article at https://www.nature.com/articles/s41597-026-07568-7 and the data at https://zenodo.org/records/18154592.
 
-    Nicu, I.C., Rouyet, L., Rubensdotter, L. et al. Permafrost-related hazard, vulnerability and risk estimates for cultural heritage and modern buildings in Svalbard. *Sci Data* (2026). https://doi.org/10.1038/s41597-026-07568-7
+    Nicu, I.C., Rouyet, L., Rubensdotter, L. et al. Permafrost-related hazard, vulnerability and risk estimates for cultural heritage and modern buildings in Svalbard. *Sci Data* (2026). doi: 10.1038/s41597-026-07568-7.
     """
 )

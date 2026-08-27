@@ -59,7 +59,7 @@ time_lapse_cameras = st.Page(
 )
 
 ground_ice_content = st.Page(
-    "src/app/pages/ground_ice_content.py",
+    "src/app/pages/ground_ice.py",
     title="Ground ice content",
     icon=":material/mode_cool:",
 )
