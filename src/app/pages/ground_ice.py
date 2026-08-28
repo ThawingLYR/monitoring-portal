@@ -21,9 +21,11 @@ iframe(legend_html)
 st.header("Background information")
 st.markdown(
     """
-    This map shows the excess ground ice content based on borehole cores from 12 boreholes (white circle markers). The excess ground ice content is then extrapolated based on quaternary geological and geomorphological mapping (blue/purple polygons). 
+    This map shows the excess ground ice content in the top 1 m of the permafrost in Longyeardalen, based on borehole data from 12 locations (white circle markers). The excess ground ice content is then extrapolated based on quaternary geological and geomorphological mapping (blue/purple polygons). 
 
-    A first top 1 m permafrost ice content map has been produced for Longyeardalen, based on the presented borehole data and the quaternary geological and geomorphological mapping, showing the ice content in the top 1 m of permafrost. Till and solifluction material has a medium ground ice content (10-20% EIC) dominating the slopes in the northeast and northwest part of the valley, whereas colluvial material has a low ice content (5-10% EIC) dominating the slopes in the western part. Alluvial deposits have a negligible ice content (0-1% EIC) and only exist in the valley bottom. The highest ground ice content (more than 20% EIC) is mapped in the rock glaciers and moraines in front of the glaciers.
+    Excess ground ice content refers to the amount of ice in permafrost that exceeds the total pore space of the surrounding soil or sediment. This extra water is frozen into distinct ice bodies (i.e., ice wedges, horizontal ice lenses, or layers of pure ice). When the climate warms and permafrost thaws, the solid ice turns into liquid water and drains away, leaving an empty volume that the overlying ground cannot support. This can cause ground collapse, surface subsidence, and the formation of thermokarst landscapes (uneven terrain, water-filled depressions, sinkholes, and landslides) which heavily damages Arctic infrastructure like roads, pipelines, and buildings.
+
+    Till and solifluction material has a medium ground ice content (10-20% EIC) dominating the slopes in the northeast and northwest part of the valley, whereas colluvial material has a low ice content (5-10% EIC) dominating the slopes in the western part. Alluvial deposits have a negligible ice content (0-1% EIC) and only exist in the valley bottom. The highest ground ice content (more than 20% EIC) is mapped in the rock glaciers and moraines in front of the glaciers.
 
     The developed top permafrost ice map can now be utilised in the work to improve the resilience towards climate change and geohazards in Longyearbyen. 
 
