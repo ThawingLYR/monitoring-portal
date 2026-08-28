@@ -3,18 +3,27 @@ import folium
 
 from src.map.base_map import BaseMap
 
-from src.init.init_ground_ice_map import get_gi_poly_gdf, get_gi_mark_gdf
+from src.init.init_bedrock_map import get_br_poly_gdf, get_br_mark_gdf
 
 
-class GroundIceMap(BaseMap):
+class BedrockMap(BaseMap):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def _define_ground_ice_polygon_style(self, gdf):
+    def _define_bedrock_polygon_style(self, gdf):
         """
         Build and return a style_function and highlight_function for GeoJson polygons.
         """
-        color_scale = ["#808080", "#D0CCF5", "#989BE7", "#3669AD", "#293467"]  # devon
+        color_scale = [
+            "#829d4c",
+            "#a4c16d",
+            "#cde6a4",
+            "#eaf4b5",
+            "#f6ecae",
+            "#ecd097",
+            "#d3ac6b",
+            "#b98c4b",
+        ]  # change to bamako
 
         # style_function used by folium.GeoJson
         base = {"fillOpacity": 0.8, "color": "black", "weight": 0.5, "opacity": 1.0}
@@ -22,7 +31,7 @@ class GroundIceMap(BaseMap):
         # style functions used by folium.GeoJson
         def _style_function(feature):
             style = dict(base)
-            style["fillColor"] = color_scale[feature["properties"]["Ground_Ice_Num"]]
+            style["fillColor"] = color_scale[feature["properties"]["gridcode"] - 1]
 
             return style
 
@@ -34,27 +43,23 @@ class GroundIceMap(BaseMap):
 
     def customize_map(self):
         """
-        Add ground ice GeoJson layer to the map (self.m), created by BaseMap.
+        Add bedrock GeoJson layer to the map (self.m), created by BaseMap.
         """
         self.m
 
         # Load geodataframe and convert to geojson
-        gdf_poly = get_gi_poly_gdf()
+        gdf_poly = get_br_poly_gdf()
         geojson_poly = gdf_poly.to_json()
 
         # Get style and highlight functions
-        style_function, highlight_function = self._define_ground_ice_polygon_style(
+        style_function, highlight_function = self._define_bedrock_polygon_style(
             gdf_poly
         )
 
         # Define popup
         popup_poly = GeoJsonPopup(
-            fields=["Ground_Ice", "Landform_G", "Ice_type"],
-            aliases=[
-                "Excess ground ice content (%):",
-                "Landform type:",
-                "Extra note on ice type:",
-            ],
+            fields=["depth_range"],
+            aliases=["Interpolated depth to bedrock (m):"],
             localize=True,
             labels=True,
             style=(
@@ -65,22 +70,22 @@ class GroundIceMap(BaseMap):
         # Add GeoJson layer to the map
         folium.GeoJson(
             geojson_poly,
-            name="Excess ground ice content: extrapolated",
+            name="Depth to bedrock: interpolated",
             style_function=style_function,
             highlight_function=highlight_function,
             popup=popup_poly,
         ).add_to(self.m)
 
         # also add markers...
-        gdf_mark = get_gi_mark_gdf()
+        gdf_mark = get_br_mark_gdf()
         geojson_mark = gdf_mark.to_json()
 
         custom_marker = folium.CircleMarker(
-            radius=6,
+            radius=2,
             color="black",
             weight=1,
             fill=True,
-            fill_color="white",
+            fill_color="black",
             fill_opacity=1.0,
         )
 
@@ -88,19 +93,21 @@ class GroundIceMap(BaseMap):
         popup_mark = GeoJsonPopup(
             fields=[
                 "ID",
-                "Excess_ice",
-                "Active_Lay",
-                "Depth",
-                "Landform_G",
-                "Elevation",
+                "Reference",
+                "Inclinatio",
+                "Slope",
+                "Z",
+                "RL_bedrock",
+                "Depth_rock",
             ],
             aliases=[
                 "ID:",
-                "Excess ground ice content (%):",
-                "Active layer depth (m):",
-                "Drilling depth (m):",
-                "Landform type:",
+                "Reference:",
+                "Inclination (°):",
+                "Slope (°):",
                 "Elevation (m):",
+                "Reduced Level (RL) of bedrock:",
+                "Depth to bedrock (m):",
             ],
             localize=True,
             labels=True,
@@ -110,8 +117,8 @@ class GroundIceMap(BaseMap):
         )
 
         tooltip_mark = GeoJsonTooltip(
-            fields=["Excess_ice"],
-            aliases=["Excess ground ice content (%):"],
+            fields=["Depth_rock"],
+            aliases=["Depth to bedrock (m):"],
             localize=True,
             labels=True,
             sticky=True,
@@ -122,7 +129,7 @@ class GroundIceMap(BaseMap):
 
         folium.GeoJson(
             geojson_mark,
-            name="Excess ground ice content: observations",
+            name="Depth to bedrock: observations",
             marker=custom_marker,
             popup=popup_mark,
             tooltip=tooltip_mark,
