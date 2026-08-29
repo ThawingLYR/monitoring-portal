@@ -25,13 +25,13 @@ home_page = st.Page("src/app/pages/about.py", title="About", icon=":material/hom
 
 ground_temperature = st.Page(
     "src/app/pages/main_boreholes_temperature.py",
-    title="Ground temperature",
+    title="Ground temperature old",
     default=True,
     icon=":material/thermostat:",
 )
 ground_temperature_new = st.Page(
     "src/app/pages/main_boreholes_temperature_new.py",
-    title="Ground temperature new",
+    title="Ground temperature",
     icon=":material/thermostat:",
 )
 ground_water_content = st.Page(
@@ -46,7 +46,7 @@ weather_stations = st.Page(
 )
 insar_deformation = st.Page(
     "src/app/pages/insar_deformation.py",
-    title="InSAR deformation",
+    title="InSAR ground deformation",
     icon=":material/satellite_alt:",
 )
 all_sky_camera = st.Page(
@@ -59,12 +59,24 @@ time_lapse_cameras = st.Page(
 )
 
 ground_ice_content = st.Page(
-    "src/app/pages/ground_ice_content.py",
+    "src/app/pages/ground_ice.py",
     title="Ground ice content",
     icon=":material/mode_cool:",
 )
+bedrock = st.Page(
+    "src/app/pages/bedrock.py", title="Bedrock depth", icon=":material/elevation:"
+)
 geomorphology = st.Page(
     "src/app/pages/geomorphology.py", title="Geomorphology", icon=":material/landscape:"
+)
+
+
+risk_modern_buildings = st.Page(
+    "src/app/pages/risk_mb.py", title="Modern buildings", icon=":material/house:"
+)
+
+risk_cultural_heritage = st.Page(
+    "src/app/pages/risk_ch.py", title="Cultural Heritage", icon=":material/cabin:"
 )
 
 landslide_model = st.Page(
@@ -87,16 +99,18 @@ instrument_status = st.Page(
 pg = st.navigation(
     {
         "": [home_page],
-        "Observations": [
-            ground_temperature,
+        "Live observations": [
             ground_temperature_new,
             ground_water_content,
             weather_stations,
-            insar_deformation,
             all_sky_camera,
             time_lapse_cameras,
         ],
-        "Static maps": [ground_ice_content, geomorphology],
+        "Static maps": [ground_ice_content, bedrock, geomorphology, insar_deformation],
+        "Permafrost-related hazard, vulnerability and risk": [
+            risk_modern_buildings,
+            risk_cultural_heritage,
+        ],
         "Modeling": [landslide_model, weather_model],
         "Instrument status": [instrument_status],
     }
