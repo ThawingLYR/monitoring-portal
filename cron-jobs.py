@@ -3,10 +3,6 @@ from src.sensors.borehole import SensorBorehole
 
 from src.plots.boreholes import all_boreholes_figures
 
-# from dotenv import load_dotenv
-
-# load_dotenv()
-
 # Prepare the data for all boreholes and generate the figures
 config_manager = ConfigManager()
 config_manager.load_config("boreholes")

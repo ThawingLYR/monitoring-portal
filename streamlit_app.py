@@ -25,13 +25,8 @@ home_page = st.Page("src/app/pages/about.py", title="About", icon=":material/hom
 
 ground_temperature = st.Page(
     "src/app/pages/main_boreholes_temperature.py",
-    title="Ground temperature old",
-    default=True,
-    icon=":material/thermostat:",
-)
-ground_temperature_new = st.Page(
-    "src/app/pages/main_boreholes_temperature_new.py",
     title="Ground temperature",
+    default=True,
     icon=":material/thermostat:",
 )
 ground_water_content = st.Page(
@@ -100,7 +95,7 @@ pg = st.navigation(
     {
         "": [home_page],
         "Live observations": [
-            ground_temperature_new,
+            ground_temperature,
             ground_water_content,
             weather_stations,
             all_sky_camera,

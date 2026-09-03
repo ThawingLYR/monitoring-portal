@@ -6,15 +6,13 @@ import pandas as pd
 
 
 class PlotTimeseriesMonthsBoreholes(Figure):
-    name: str = "Surface Temperature by Month"
-
     def create_figure(self, sensor):
         fig = go.Figure()
         data = sensor.get_data()
         data = data.resample("1D").mean()
 
         # Extract soil temperature data
-        data = sensor.extract_mutli_index(data)["soil_temperature"]
+        data = sensor.extract_multi_index(data)["soil_temperature"]
 
         # Get the shallowest depth (closest to surface)
         shallowest_depth = min(data.columns.astype(int))
@@ -39,19 +37,37 @@ class PlotTimeseriesMonthsBoreholes(Figure):
             .reset_index()
         )
 
-        # Plot each year as a line, using day_of_year as x-axis (1-365/366)
+        # Set linestyle
         years = grouped_data["year"].unique()
         n_years = len(years)
-        colorscale = plt.cm.Greys(np.linspace(0.2, 0.8, n_years))  # Black to grey
+        colorscale = plt.cm.Greys(np.linspace(0.2, 0.8, n_years))
 
         for i, year in enumerate(years):
             year_data = grouped_data[grouped_data["year"] == year]
+
+            # Build hovertext
+            origin = pd.Timestamp(f"{year}-01-01")
+            dates = pd.to_datetime(
+                year_data["day_of_year"] - 1, unit="D", origin=origin
+            )
+            hovertext = [
+                (
+                    f"Temp: {temp:.2f} °C<br>"
+                    f"Day of year: {d.strftime('%d %b')}<br>"
+                    f"Year: {year}"
+                )
+                for d, temp in zip(dates, year_data["temperature"])
+            ]
+
+            # Set linestyle
             color = (
                 "blue"
                 if year == current_year
-                else f"rgba({colorscale[i][0]}, {colorscale[i][1]}, {colorscale[i][2]}, 0.8)"
+                else f"rgba({colorscale[i][0]}, {colorscale[i][1]}, {colorscale[i][2]}, 1.0)"
             )
             width = 2 if year == current_year else 1
+
+            # Plot each year as a line
             fig.add_trace(
                 go.Scatter(
                     x=year_data["day_of_year"],
@@ -59,12 +75,20 @@ class PlotTimeseriesMonthsBoreholes(Figure):
                     mode="lines",
                     name=f"{year}",
                     line=dict(color=color, width=width),
+                    showlegend=True,
+                    text=hovertext,
+                    hovertemplate="%{text}<extra></extra>",
                 )
             )
 
-        # Update layout for day of year (1-365/366)
+        # Add titles and labels etc.
         fig.update_layout(
-            title=f"{sensor.config.name} Surface Temperature by Day of Year (Daily Resolution)",
+            title=dict(
+                text="Surface temperature by day of year",  # f"{sensor.config.name}
+                x=0.5,
+                xanchor="center",
+            ),
+            showlegend=True,
             xaxis_title="Day of Year",
             yaxis_title="Temperature [°C]",
             xaxis=dict(
@@ -86,6 +110,21 @@ class PlotTimeseriesMonthsBoreholes(Figure):
                     "",
                 ],
             ),
+            legend_title_text="Year",
+        )
+
+        # Add annotations
+        fig.add_annotation(
+            text="Data resampled to daily means",
+            x=0,
+            y=1.10,
+            xref="paper",
+            yref="paper",
+            showarrow=False,
+            xanchor="left",
+            align="left",
+            font=dict(size=12, color="gray"),
+            xshift=3,
         )
 
         return fig
