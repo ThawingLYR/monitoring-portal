@@ -113,7 +113,9 @@ class StationConfig(BaseModel):
         Returns:
             Icon: A folium Icon configured with the station's marker color and icon.
         """
-        return Icon(color=self.marker.color, icon=self.marker.icon)
+        return Icon(
+            color=self.marker.color, icon=self.marker.icon, prefix=self.marker.prefix
+        )
 
     def get_popup_html(self) -> str:
         """
