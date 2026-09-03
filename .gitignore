@@ -42,9 +42,7 @@ Thumbs.db
 /figure/
 /map_data/
 LyBQuatMap10k_Rubensdotter_2022_EPSG32633.geojson
-/map_data_source/risk/
-/map_data_source/geomorphology/
-/map_data_source/ground_ice/
+/map_data_source/
 
 # Environment and logs
 .env*
