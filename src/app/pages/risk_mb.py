@@ -6,7 +6,7 @@ from src.init.init_risk_map import get_mb_legend
 from src.utils.embed_folium_map import embed_folium_map
 
 # Page Setup
-st.set_page_config(page_title="Modern buildings", layout="wide")
+st.set_page_config(page_title="ThawingLYR", layout="wide")
 st.title("Modern buildings")
 
 # Create map
@@ -22,7 +22,7 @@ st.header("Background information")
 st.markdown(
     """
     **Risk score**  
-    This product uses the “footprint” of each modern buildings in Longyearbyen, based on the dataset from the Longyearbyen Community Council (Longyearbyen Lokalstyre). The risk was estimated based on hazard scores (geomorphological, InSAR, coastal erosion) and vulnerability scores. The three hazard scores were summed up, then normalised. The final risk estimate corresponds to the product of the normalised hazard score and the vulnerability score.
+    This product uses the “footprint” of each modern buildings in Longyearbyen, based on the dataset from the Longyearbyen Community Council (Longyearbyen Lokalstyre). The risk was estimated based on hazard scores (geomorphological, InSAR, coastal erosion) and vulnerability scores. The three hazard scores were summed up, then normalised. The final risk estimate corresponds to the product of the normalised hazard score and the vulnerability score. Note that the maximum risk score is 16 (4 x 4), and that the highest risk score in this dataset is 8. These are qualitative, not quantitative, scores.
 
     **Hazard score**  
     The hazard score is based on geomorphology, InSAR ground deformation, and coastal erosion.

@@ -6,7 +6,7 @@ from src.init.init_ground_ice_map import get_gi_legend
 from src.utils.embed_folium_map import embed_folium_map
 
 # Page Setup
-st.set_page_config(page_title="Excess ground ice content", layout="wide")
+st.set_page_config(page_title="ThawingLYR", layout="wide")
 st.title("Excess ground ice content")
 
 # Create map

@@ -27,8 +27,14 @@ def convert_df(df):
 
 
 # Set page configuration
-st.set_page_config(page_title="Weather stations", layout="wide")
+st.set_page_config(page_title="ThawingLYR", layout="wide")
 st.title("Weather stations")
+
+st.markdown(
+    """
+**Under Development** This page will show historic and current weather observables
+"""
+)
 
 m = get_folium_basemap()
 folium.LayerControl().add_to(m)

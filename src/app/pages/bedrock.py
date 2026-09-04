@@ -6,7 +6,7 @@ from src.init.init_bedrock_map import get_br_legend
 from src.utils.embed_folium_map import embed_folium_map
 
 # Page Setup
-st.set_page_config(page_title="Bedrock depth", layout="wide")
+st.set_page_config(page_title="ThawingLYR", layout="wide")
 st.title("Bedrock depth")
 
 # Create map

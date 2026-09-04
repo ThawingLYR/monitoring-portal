@@ -21,8 +21,8 @@ config_manager = ConfigManager()
 config_manager.load_config("boreholes")
 
 # Page setup
-st.set_page_config(page_title="Ground temperature data visualization", layout="wide")
-st.title("Ground temperature data visualization")
+st.set_page_config(page_title="ThawingLYR", layout="wide")
+st.title("Ground temperature")
 
 # Session state
 if "last_button" not in st.session_state:
@@ -41,6 +41,24 @@ st_data = st_folium(
     use_container_width=True,
     height=450,
     returned_objects=["last_object_clicked_tooltip"],
+)
+
+st.markdown(
+    """
+    <style>
+    /* allow button text to wrap and increase padding for readability */
+    .stButton>button, .stDownloadButton>button {
+        white-space: normal !important;
+        height: auto !important;
+        padding: 0.6rem 1rem;
+    }
+    /* optionally increase min-width to avoid very narrow buttons */
+    .stButton>button {
+        min-width: 160px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 # User interaction
@@ -109,8 +127,28 @@ if st_data["last_object_clicked_tooltip"] is not None:
     # Recent data
     elif st.session_state.last_button == "recent":
         with st.spinner("Generating plots..."):
-            col2_1, col2_2 = st.columns(2)
-            with col2_1:
-                st.write("Plots")
-            with col2_2:
-                st.write("More plots")
+            st.markdown(
+                """
+                **Under development** This page will show the recent (short-term) data for ground temperature at the borehole locations.
+                """
+            )
+            # col2_1, col2_2 = st.columns(2)
+            # with col2_1:
+            # with col2_2:
+
+st.markdown(
+    """
+    ## Background information
+
+    Click on a borehole marker in the map. 3 buttons will appear:
+    - Show historic (long-term) data
+    - Show recent (short-term) data
+    - Press to download data (CSV)
+
+    The plots are interactive. Cover the pointer over the plot for a menubar with options (symbols) to appear: download plot as PNG, zoom, pan, zoom in, zoom out, autoscale, reset axes, and fullscreen. Click on individual legend items to make the corresponding data (dis)appear in the plot.
+
+    The boreholes, equipped with thermistors strings, measure temperature at different depths, usually every 6 hours, and send data real-time.
+
+    Note that for the trumpet curve the profile can be skewed depending on data availability, e.g., data gaps, or start date of measuring is halfway through the first season.
+    """
+)
