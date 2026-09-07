@@ -6,7 +6,7 @@ from src.init.init_risk_map import get_ch_legend
 from src.utils.embed_folium_map import embed_folium_map
 
 # Page Setup
-st.set_page_config(page_title="Cultural Heritage", layout="wide")
+st.set_page_config(page_title="ThawingLYR", layout="wide")
 st.title("Cultural Heritage")
 
 # Create map
@@ -22,7 +22,7 @@ st.header("Background information")
 st.markdown(
     """
     **Risk score**  
-    This product uses the “footprint” of each cultural heritage asset/feature on Svalbard, based on the dataset from the Norwegian Directorate for Cultural Heritage. The risk was estimated based on hazard scores (geomorphological, InSAR, coastal erosion) and vulnerability scores. The three hazard scores were summed up, then normalised. The final risk estimate corresponds to the product of the normalised hazard score and the vulnerability score.
+    This product uses the “footprint” of each cultural heritage asset/feature on Svalbard, based on the dataset from the Norwegian Directorate for Cultural Heritage. The risk was estimated based on hazard scores (geomorphological, InSAR, coastal erosion) and vulnerability scores. The three hazard scores were summed up, then normalised. The final risk estimate corresponds to the product of the normalised hazard score and the vulnerability score. Note that the maximum risk score is 16 (4 x 4), and that the highest risk score in this dataset is 12. These are qualitative, not quantitative, scores.
 
     **Hazard score**  
     The hazard score is based on geomorphology, InSAR ground deformation, and coastal erosion.

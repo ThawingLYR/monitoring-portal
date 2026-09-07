@@ -21,12 +21,13 @@ if "env_loaded" not in st.session_state:
     st.session_state.env_loaded = True
 
 
-home_page = st.Page("src/app/pages/about.py", title="About", icon=":material/home:")
+home_page = st.Page(
+    "src/app/pages/about.py", default=True, title="About", icon=":material/home:"
+)
 
 ground_temperature = st.Page(
     "src/app/pages/main_boreholes_temperature.py",
     title="Ground temperature",
-    default=True,
     icon=":material/thermostat:",
 )
 ground_water_content = st.Page(
@@ -81,13 +82,13 @@ landslide_model = st.Page(
 )
 weather_model = st.Page(
     "src/app/pages/weather_model.py",
-    title="Weather model (high resolution)",
+    title="Weather model",
     icon=":material/rainy:",
 )
 
 instrument_status = st.Page(
     "src/app/pages/instrument_status.py",
-    title="Boreholes status",
+    title="Instrument status",
     icon=":material/battery_alert:",
 )
 
@@ -98,7 +99,7 @@ pg = st.navigation(
             ground_temperature,
             ground_water_content,
             weather_stations,
-            all_sky_camera,
+            # all_sky_camera,
             time_lapse_cameras,
         ],
         "Static maps": [ground_ice_content, bedrock, geomorphology, insar_deformation],
