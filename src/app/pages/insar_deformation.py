@@ -7,7 +7,7 @@ st.title("InSAR deformation")
 
 st.markdown(
     """
-**Under Development** This page will show interactive maps of interannual and seasonal ground deformation measured by InSAR (Interferometric Synthetic Aperture Radar). These maps can then be used to identify areas of larger movement and susceptibility to landsliding. Another signal present in this data is the thaw-subsidence and freeze-heave, which can tell us more about active layer processes and ground ice content. For example, see https://doi.org/10.5194/tc-20-1179-2026 (Wendt, L., Rouyet, L., Christiansen, et al. InSAR sensitivity to active layer ground ice content in Adventdalen, Svalbard. *The Cryosphere*, 20, pp. 1179-1197 (2026) 20. doi: 10.5194/tc-20-1179-2026.
+**Under Development** This page will show interactive maps of interannual and seasonal ground deformation measured by InSAR (Interferometric Synthetic Aperture Radar). These maps can then be used to identify areas of larger movement and susceptibility to landsliding. Another signal present in this data is the thaw-subsidence and freeze-heave, which can tell us more about active layer processes and ground ice content. For example, see https://doi.org/10.5194/tc-20-1179-202: Wendt, L., Rouyet, L., Christiansen, et al. InSAR sensitivity to active layer ground ice content in Adventdalen, Svalbard. *The Cryosphere*, 20, pp. 1179-1197 (2026) 20. doi: 10.5194/tc-20-1179-2026.
 
 **InSAR background and limitations**
 
