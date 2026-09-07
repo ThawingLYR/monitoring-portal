@@ -4,8 +4,8 @@ from PIL import Image
 from pathlib import Path
 
 # Load image
-project_root = Path(__file__).resolve().parents[3]
-IMAGE_PATH = project_root / "landslide_example.png"
+HERE = Path(__file__).parent.resolve()
+IMAGE_PATH = HERE / "landslide_example.png"
 
 image = Image.open(IMAGE_PATH)
 
