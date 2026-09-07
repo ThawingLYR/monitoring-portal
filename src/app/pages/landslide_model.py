@@ -1,9 +1,13 @@
 # Imports
 import streamlit as st
 from PIL import Image
+from pathlib import Path
 
 # Load image
-image = Image.open("landslide_example.png")
+project_root = Path(__file__).resolve().parents[3]
+IMAGE_PATH = project_root / "landslide_example.png"
+
+image = Image.open(IMAGE_PATH)
 
 # Set page configuration
 st.set_page_config(page_title="ThawingLYR", layout="wide")
