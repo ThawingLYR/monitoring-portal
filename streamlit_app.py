@@ -30,6 +30,11 @@ ground_temperature = st.Page(
     title="Ground temperature",
     icon=":material/thermostat:",
 )
+frost_tube = st.Page(
+    "src/app/pages/frost_tube.py",
+    title="Ground temperature: frost tubes",
+    icon=":material/thermostat:",
+)
 ground_water_content = st.Page(
     "src/app/pages/borehole_ground_water_content.py",
     title="Ground water content",
@@ -97,6 +102,7 @@ pg = st.navigation(
         "": [home_page],
         "Live observations": [
             ground_temperature,
+            frost_tube,
             ground_water_content,
             weather_stations,
             # all_sky_camera,
