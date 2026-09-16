@@ -1,5 +1,5 @@
 from streamlit import iframe
-from base64 import b64encode
+# from base64 import b64encode
 
 
 def embed_folium_map(m, height=700):
