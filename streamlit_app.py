@@ -44,9 +44,9 @@ weather_stations = st.Page(
     title="Weather stations",
     icon=":material/cloud:",
 )
-NETATMO_WEATHER_STATIONS = st.Page(
-    "src/app/pages/main_netatmo_weather_stations.py",
-    title="Netatmo weather stations new",
+weather_stations_new = st.Page(
+    "src/app/pages/main_weather_stations_new.py",
+    title="Weather stations new",
     icon=":material/cloud:",
 )
 insar_deformation = st.Page(
@@ -97,7 +97,7 @@ pg = st.navigation(
             ground_temperature_new,
             ground_water_content,
             weather_stations,
-            NETATMO_WEATHER_STATIONS,
+            weather_stations_new,
             insar_deformation,
             all_sky_camera,
             time_lapse_cameras,
