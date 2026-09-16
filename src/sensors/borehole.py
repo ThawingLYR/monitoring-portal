@@ -26,8 +26,8 @@ class SensorBorehole(Sensor):
 
             # Determine the start time for the fetch
             if self.data is None or self.data.data is None:
-                # If no data exists, fetch the last 10 years
-                start = datetime.now(timezone.utc) - timedelta(days=3650)
+                # If no data exists, fetch the last 40 years
+                start = datetime.now(timezone.utc) - timedelta(days=14600)
             else:
                 # Otherwise, fetch from the last recorded timestamp
                 start = self.data.data.index.max().compute()
@@ -43,7 +43,11 @@ class SensorBorehole(Sensor):
                 variables=["soil_temperature"],
             )
 
+            # Some boreholes (Elvesletta) having 2 sensors at the same depth, take the mean
             df = df.T.groupby(level=0).mean().T
+
+            # Get rid of nonsense values
+            df[(df > 35) | (df < -35)] = np.nan
 
             return df
 
@@ -51,7 +55,7 @@ class SensorBorehole(Sensor):
             logger.error(f"Failed to fetch or process borehole data: {e}")
             raise
 
-    def extract_mutli_index(self, df):
+    def extract_multi_index(self, df):
         # Extract dimension names (e.g., "depth", "height") from column names
         # Assumes columns are in the format: "{variable}-{dimension}{value}"
         dim_name = [re.sub(r"\d+", "", c.split("-")[1]) for c in df.columns]

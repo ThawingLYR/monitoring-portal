@@ -1,5 +1,6 @@
 import folium
 from typing import Optional
+from folium import Element
 
 
 class BaseMap:
@@ -79,9 +80,16 @@ class BaseMap:
     def customize_map(self):
         return
 
+    def get_extra_js(self) -> Optional[Element]:
+        # Child class override to return a folium.Element(js_string) or None
+        return None
+
     def get_map(self):
         self.customize_map()
         m = self.m
-        folium.LayerControl().add_to(m)
+        folium.LayerControl(collapsed=False).add_to(m)
+        extra = self.get_extra_js()
+        if extra is not None:
+            self.m.get_root().html.add_child(extra)
 
         return m

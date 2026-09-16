@@ -25,6 +25,7 @@ from src.sensors.borehole import SensorBorehole
 
 # A single manager is reused throughout: its configuration cache is a class
 # attribute that a second instantiation would reset.
+# Prepare the data for all boreholes and generate the figures
 config_manager = ConfigManager()
 
 
