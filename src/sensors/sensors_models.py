@@ -18,7 +18,7 @@ import numpy as np
 from pydantic import BaseModel, ConfigDict, model_validator
 import dask.dataframe as dd
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import tempfile
 from abc import abstractmethod, ABC
 from src.config.config_class import StationConfig
@@ -100,27 +100,20 @@ class Sensor(BaseModel, ABC):
         they are loaded into the `data` attribute.
         """
         super().__init__(**data)
+        folder_name = self._path_component(self.config.sourceID)
         self.data_folder = os.path.join(
-            os.getenv("DATA_DIR", "data/"), self.config.sourceType, self.config.sourceID
+            os.getenv("DATA_DIR", "data/"), self.config.sourceType, folder_name
         )
-        if not os.path.exists(self.data_folder):
-            os.makedirs(self.data_folder)
-            logger.info(
-                f"Created folder for sensor data: {self.data_folder}. No data file exists yet."
-            )
+        self._ensure_folder(self.data_folder, "data")
 
         self.figure_folder = os.path.join(
             os.getenv("FIG_DIR", "figure/"),
             self.config.sourceType,
-            self.config.sourceID,
+            folder_name,
         )
-        if not os.path.exists(self.figure_folder):
-            os.makedirs(self.figure_folder)
-            logger.info(
-                f"Created folder for sensor figures: {self.data_folder}. No data file exists yet."
-            )
+        self._ensure_folder(self.figure_folder, "figures")
 
-        if os.listdir(self.data_folder):
+        if os.path.isdir(self.data_folder) and os.listdir(self.data_folder):
             logger.info(
                 f"Loading existing data for sensor {self.config.sourceID} from {self.data_folder}."
             )
@@ -142,6 +135,103 @@ class Sensor(BaseModel, ABC):
                 data=None,
                 update_time=None,
             )
+
+    @staticmethod
+    def _path_component(source_id: str) -> str:
+        """
+        Makes a sourceID safe to use as a folder name on any platform.
+
+        Netatmo stations are identified by their MAC address, e.g.
+        "70:ee:50:1e:00:34_0". Colons are legal in POSIX paths but reserved on
+        Windows, so a developer running the collection job locally on Windows
+        would otherwise get an opaque OSError. Identifiers that are already safe -
+        every borehole and Frost station - are returned unchanged, so this does not
+        move any existing data.
+
+        Args:
+            source_id (str): The station's source identifier.
+
+        Returns:
+            str: The identifier with reserved characters replaced by "-".
+        """
+        reserved = ':*?"<>|/\\'
+        return "".join(
+            "-" if character in reserved else character for character in source_id
+        )
+
+    @staticmethod
+    def _ensure_folder(path: str, kind: str) -> None:
+        """
+        Creates a folder for the sensor if it does not exist yet.
+
+        The Streamlit container mounts the data and figure volumes read-only, so a
+        station the cron job has never written cannot have its folder created there.
+        That is an expected condition rather than an error: the sensor simply has no
+        data to show.
+
+        Args:
+            path (str): The folder to create.
+            kind (str): Human readable description used in log messages.
+        """
+        if os.path.exists(path):
+            return
+        try:
+            os.makedirs(path, exist_ok=True)
+            logger.info(
+                f"Created folder for sensor {kind}: {path}. No file exists yet."
+            )
+        except OSError as error:
+            logger.warning(
+                f"Could not create folder for sensor {kind}: {path} ({error}). "
+                "Continuing without it; this is expected on a read-only mount."
+            )
+
+    def get_latest_values(
+        self, lookback: timedelta = timedelta(hours=24)
+    ) -> pd.DataFrame:
+        """
+        Retrieves the most recent valid value of every variable of the sensor.
+
+        Providers may write one row per hardware module, leaving the columns of the
+        other modules empty on that row. The latest value is therefore resolved
+        column by column rather than by taking the last row of the DataFrame, which
+        would be mostly missing values.
+
+        Args:
+            lookback (timedelta): How far back to search for a valid value.
+                Defaults to 24 hours.
+
+        Returns:
+            pd.DataFrame: One row per variable, indexed by variable name, with the
+                columns `value` (float) and `timestamp` (timezone-aware UTC).
+                Empty if the sensor has no data in the window.
+        """
+        # Stored timestamps are timezone-naive UTC (see `update_data`), so the bound
+        # must be naive too, and the results are re-localized on the way out.
+        start_time = datetime.now(timezone.utc).replace(tzinfo=None) - lookback
+        df = self.get_data(start_time=start_time)
+
+        if df is None or df.empty:
+            logger.info(
+                f"No data in the last {lookback} for sensor {self.config.sourceID}."
+            )
+            return pd.DataFrame(columns=["value", "timestamp"])
+
+        df = df.sort_index()
+        records = {}
+        for column in df.columns:
+            series = df[column].dropna()
+            if series.empty:
+                continue
+            timestamp = series.index[-1]
+            if timestamp.tzinfo is None:
+                timestamp = timestamp.tz_localize("UTC")
+            records[column] = {"value": series.iloc[-1], "timestamp": timestamp}
+
+        if not records:
+            return pd.DataFrame(columns=["value", "timestamp"])
+
+        return pd.DataFrame.from_dict(records, orient="index")
 
     def update_data(self, new_data: pd.DataFrame) -> None:
         """
@@ -208,11 +298,16 @@ class Sensor(BaseModel, ABC):
                                 f"Missing column {col} in the new data - filling with NaN"
                             )
 
-                        # Only raise error if there are columns in new_data not in existing_data
-                        if missing_in_existing:
-                            raise ValueError(
-                                f"Header mismatch for {month_str}. "
-                                f"Columns in new data not present in existing: {missing_in_existing}."
+                        # A variable the station has not reported before is normal
+                        # rather than exceptional: a Netatmo station only reports its
+                        # wind or rain columns when those modules are awake, so the
+                        # first write of a month may well be narrower than the next
+                        # one. Widen the stored data instead of refusing the write.
+                        for col in missing_in_existing:
+                            existing_data[col] = np.nan
+                            logger.info(
+                                f"New column {col} for {month_str} - backfilling the "
+                                "existing rows with NaN"
                             )
                 else:
                     existing_data = pd.DataFrame(columns=new_data.columns)
@@ -322,9 +417,8 @@ class Sensor(BaseModel, ABC):
             >>> self._get_figure_cache("module.FigureMaker")
             '/path/to/figure_folder/sourceType_sourceID_module.FigureMaker.json'
         """
-        file_name = (
-            f"{self.config.sourceType}_{self.config.sourceID}_{figure_maker_name}.json"
-        )
+        source_id = self._path_component(self.config.sourceID)
+        file_name = f"{self.config.sourceType}_{source_id}_{figure_maker_name}.json"
         return os.path.join(self.figure_folder, file_name)
 
     def prepare_figure(self, figure_maker: Type[Figure]) -> None:
