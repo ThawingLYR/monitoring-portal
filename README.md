@@ -64,6 +64,10 @@ This app uses data from multiple providers, for which **API keys must be provide
 Obtain a key at [frost.met.no](https://frost.met.no/auth/requestCredentials.html).
 - **Tilsig API**:  
 Please contact the [project maintainers](https://github.com/ThawingLYR/monitoring-portal/issues) to request access.
+- **Netatmo API**:  
+Register an application at [dev.netatmo.com](https://dev.netatmo.com/). See
+[`src/datasource/netatmo.md`](src/datasource/netatmo.md) for the full setup, including
+the rotating refresh token and the encryption key it needs.
 
 
 > 🔑 **Note:** Store your API keys securely in the `.env` file (see `.env.example` for the required format).
@@ -124,8 +128,18 @@ In a local machine, uncomment the port forwarding in the docker compose file.
    tilsig_username=your_tilsig_username
    tilsig_password=your_tilsig_password
    frost_client_id=your_frost_client_id
+   netatmo_client_id=your_netatmo_client_id
+   netatmo_client_secret=your_netatmo_client_secret
+   netatmo_first_refresh_token=your_netatmo_refresh_token
+   local_store_secret_key=your_generated_fernet_key
+   NETATMO_MAX_AGE_MINUTES=15
    THAWINGLYR_CONFIG_REPO=https://github.com/ThawingLYR/monitoring-portal-configuration.git
    ```
+
+   > 🔑 `local_store_secret_key` must be a Fernet key, generated with
+   > `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"`.
+   > `NETATMO_MAX_AGE_MINUTES` must match the period the `cron-tasks` container is
+   > scheduled at. See [`src/datasource/netatmo.md`](src/datasource/netatmo.md).
 
 2. **Start all services:**
 
@@ -169,6 +183,17 @@ We welcome contributions! Here’s how you can help:
 5. Open a **Pull Request**.
 
 > 📜 **Note:** Ensure your code passes `pre-commit` checks before submitting.
+
+### 🙏 Acknowledgements
+
+Thanks to everyone who has contributed to the portal, and in particular:
+
+- **[@PSelleunis](https://github.com/PSelleunis)** — the Netatmo integration
+  ([#44](https://github.com/ThawingLYR/monitoring-portal/pull/44)): the
+  `getpublicdata` client, the encrypted store that keeps Netatmo's rotating
+  refresh token, and the weather station map with its metric selection and
+  value-coloured markers. See
+  [`src/datasource/netatmo.md`](src/datasource/netatmo.md).
 
 ## 📜 License
 
