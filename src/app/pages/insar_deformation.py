@@ -1,9 +1,18 @@
 # Imports
 import streamlit as st
+from src.init.init_insar_map import init_insar
+from src.map.insar_map import InSARMap
+from src.utils.embed_folium_map import embed_folium_map
+
+init_insar()
 
 # Set page configuration
 st.set_page_config(page_title="ThawingLYR", layout="wide")
 st.title("InSAR deformation")
+
+# Create map
+m = InSARMap().get_map()
+embed_folium_map(m, height=500)
 
 st.markdown(
     """
