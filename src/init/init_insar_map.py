@@ -187,6 +187,16 @@ def create_legend_insar():
     box-shadow: 0 1px 4px rgba(0,0,0,0.12);
     }
 
+    /* Title for the legend: larger and more space below */
+    .maplegend .maplegend-title {
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 1.2;
+      margin: 0 0 16px 0;
+      color: #222;
+      padding-bottom: 0px;
+    }
+
     /* Container for the three main columns */
     .maplegend .legend-columns {
     display: flex;
