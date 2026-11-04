@@ -35,6 +35,7 @@ services:
       - map_risk_key=${map_risk_key}
       - map_ground_ice_key=${map_ground_ice_key}
       - map_bedrock_key=${map_bedrock_key}
+      - map_insar_key=${map_insar_key}
 
     volumes:
       - map_data:/streamlit-app/map_data:rw
