@@ -10,6 +10,12 @@ RUN uv pip compile pyproject.toml > requirements.txt
 # Stage 2: Build
 FROM python:${PYTHON_VERSION}-slim AS builder
 WORKDIR /streamlit-app
+
+# Install minimal runtime system lib required by rasterio
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libexpat1 \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 COPY --from=uv /streamlit-app/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -19,7 +25,11 @@ ARG VERSION
 ARG PYTHON_VERSION
 WORKDIR /streamlit-app
 
-RUN apt-get update && apt-get install -y git && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install minimal runtime system lib required by rasterio and git
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    libexpat1 \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy only necessary files from the builder stage
 COPY --from=builder /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
@@ -41,6 +51,11 @@ ARG VERSION
 ARG PYTHON_VERSION
 WORKDIR /streamlit-app
 
+# Install minimal runtime system lib required by rasterio
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libexpat1 \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Copy only necessary files from the builder stage
 COPY --from=builder /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
@@ -53,7 +68,8 @@ RUN echo "VERSION = '${VERSION}'" > ./src/app/version.py
 CMD ["sh", "-c", "python -m src.init.init_geomorph_map && \
                    python -m src.init.init_risk_map && \
                    python -m src.init.init_ground_ice_map && \
-                   python -m src.init.init_bedrock_map" ]
+                   python -m src.init.init_bedrock_map && \
+                   python -m src.init.init_insar_map" ]
 
 # Stage 3: Runtime
 FROM python:${PYTHON_VERSION}-slim AS streamlit-app
@@ -61,11 +77,15 @@ ARG VERSION
 ARG PYTHON_VERSION
 WORKDIR /streamlit-app
 
+# Install minimal runtime system lib required by rasterio and curl
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    libexpat1 \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Copy only necessary files from the builder stage
 COPY --from=builder /usr/local/lib/python${PYTHON_VERSION}/site-packages /usr/local/lib/python${PYTHON_VERSION}/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
-
-RUN apt-get update && apt-get install -y curl && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy application code
 COPY streamlit_app.py ./
