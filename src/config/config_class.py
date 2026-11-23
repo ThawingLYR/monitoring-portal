@@ -21,7 +21,7 @@ from datetime import datetime
 from src.utils.utc_managment import make_utc
 
 # Define all possible types of stations.
-StationType = Literal["boreholes", "aws"]
+StationType = Literal["boreholes", "aws", "aws_temp"]
 
 # Define all the data providers.
 DataProvider = Literal["frost", "tilsig", "netatmo"]

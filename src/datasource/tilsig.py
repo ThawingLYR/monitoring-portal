@@ -9,6 +9,7 @@ from typing import Any, Dict
 from pandas import DataFrame
 
 import pandas as pd
+import re
 
 from src.auth.secrets import get_secret
 
@@ -30,7 +31,7 @@ class TilsigDataSource(DataSource):
         variables: list[str],
     ) -> DataFrame:
 
-        assert len(variables) == 1
+        # assert len(variables) == 1
 
         endpoint = "https://api.tilsig.com/v1/measurement/raw"
 
@@ -51,7 +52,9 @@ class TilsigDataSource(DataSource):
                     "stationId": "",
                     "deviceId": "",
                     "sensorId": sensor.sensorID,
-                    "from": end.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+                    "from": end.strftime(
+                        "%Y-%m-%dT%H:%M:%S.%fZ"
+                    ),  # should't it be from start to end? how does this work?
                     "to": start.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
                 }
                 r = self.session.get(endpoint, params=parameters)
@@ -115,6 +118,38 @@ class TilsigDataSource(DataSource):
 
         return session
 
+    def _normalize_type_unit_aws(self, col: str) -> str:
+        """
+        Convert strings like "Atmospheric Pressure (kPa)" or "Air Temperature (°C)"
+        to "atmospheric_pressure_kPa" and "air_temperature_degC".
+        """
+        # Try to capture "type (unit)" form
+        m = re.match(r"^(.*?)\s*$(.+?)$\s*$", col)
+
+        if m:
+            typ, unit = m.group(1), m.group(2)
+        else:
+            # fallback: treat last token as unit if present
+            parts = re.split(r"[\s_]+", col.strip())
+            if len(parts) > 1:
+                typ, unit = " ".join(parts[:-1]), parts[-1]
+            else:
+                typ, unit = col, ""
+
+        # Replace degree symbol with 'deg' in unit and remove spaces around it
+        unit = unit.replace("°", "deg")
+
+        # Clean the unit: keep alphanumerics and a few allowed symbols (%, deg, ° already replaced)
+        unit = re.sub(r"[^0-9A-Za-z%°]+", "", unit)  # ° unlikely now, but kept safe
+
+        # Normalize the type: lowercase, replace any non-alnum with underscore, collapse underscores
+        typ = typ.lower()
+        typ = re.sub(r"[^0-9a-z]+", "_", typ)
+        typ = re.sub(r"_{2,}", "_", typ).strip("_")
+
+        # Join type and unit (omit underscore if unit is empty)
+        return f"{typ}_{unit}" if unit else typ
+
     def _format_data(
         self, data: Dict[str, Any], variable_name: str, sensor: StationSensors
     ) -> DataFrame:
@@ -122,22 +157,32 @@ class TilsigDataSource(DataSource):
 
         df["timestamp"] = pd.to_datetime(df["timestamp"], format="ISO8601")
 
-        sequences = df.sequence.unique()
+        if self.config.sourceType == "boreholes":
+            sequences = df.sequence.unique()
 
-        new_df = pd.concat(
-            [
-                df[df["sequence"] == seq][["value", "timestamp"]]
-                .set_index("timestamp")
-                .rename(
-                    columns={
-                        "value": f"{variable_name}-depth_below_surface_{sensor.depth[seq]:05.0f}cm"
-                    }
-                )
-                for seq in sequences
-            ],
-            axis=1,
-            sort=True,  # Explicitly sort the index
-        ).sort_index(axis=1)
+            new_df = pd.concat(
+                [
+                    df[df["sequence"] == seq][["value", "timestamp"]]
+                    .set_index("timestamp")
+                    .rename(
+                        columns={
+                            "value": f"{variable_name}-depth_below_surface_{sensor.depth[seq]:05.0f}cm"
+                        }
+                    )
+                    for seq in sequences
+                ],
+                axis=1,
+                sort=True,
+            ).sort_index(axis=1)
+
+        elif self.config.sourceType == "aws_temp":
+            df["type_unit"] = df["type"] + " (" + df["unit"] + ")"
+
+            df_pivot = df.pivot_table(
+                index="timestamp", columns="type_unit", values="value", aggfunc="mean"
+            ).sort_index()
+
+            new_df = df_pivot.rename(columns=self._normalize_type_unit_aws)
 
         return new_df
 

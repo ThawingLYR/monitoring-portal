@@ -45,6 +45,12 @@ weather_stations = st.Page(
     title="Weather stations",
     icon=":material/cloud:",
 )
+weather_station_nedover = st.Page(
+    "src/app/pages/weather_station_nedover.py",
+    title="Nedover ski slope weather station",
+    icon=":material/cloud:",
+)
+
 insar_deformation = st.Page(
     "src/app/pages/insar_deformation.py",
     title="InSAR ground deformation",
@@ -105,6 +111,7 @@ pg = st.navigation(
             frost_tube,
             ground_water_content,
             weather_stations,
+            weather_station_nedover,
             # all_sky_camera,
             time_lapse_cameras,
         ],

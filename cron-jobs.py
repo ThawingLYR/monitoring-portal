@@ -15,6 +15,7 @@ from loguru import logger
 
 from src.config.config_manager import ConfigManager
 from src.plots.aws import all_aws_figures
+from src.plots.aws_temp import all_aws_temp_figures
 from src.plots.boreholes import all_boreholes_figures
 from src.sensors.aws import SensorAWS
 from src.sensors.borehole import SensorBorehole
@@ -61,3 +62,6 @@ update_stations("boreholes", SensorBorehole, all_boreholes_figures)
 
 # Prepare the data for all aws stations and generate the figures
 update_stations("aws", SensorAWS, all_aws_figures)
+
+# Prepare the data for all aws stations and generate the figures
+update_stations("aws_temp", SensorAWS, all_aws_temp_figures)
