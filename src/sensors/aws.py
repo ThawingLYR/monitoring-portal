@@ -1,13 +1,11 @@
+from src.sensors.sensors_models import Sensor
+from src.datasource import DataSource
 from datetime import datetime, timedelta, timezone
-
 import pandas as pd
 from loguru import logger
 
-from src.datasource import DataSource
-from src.sensors.sensors_models import Sensor
-
 # Canonical variables requested for an automatic weather station. Providers return
-# the subset they actually measure; a provider that ignores this list (Netatmo)
+# the subset they actually measure; a provider that ignores this list (Netatmo and Tilsig)
 # simply returns everything it has.
 AWS_VARIABLES = [
     "air_temperature",
